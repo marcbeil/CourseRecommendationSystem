@@ -4,3 +4,4 @@
 resources/modules.db
 **/**.pyc
 src/scripts/test.ipynb
+resources/modules_old.db
