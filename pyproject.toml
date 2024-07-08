@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = ""
+authors = ["marcbeil <marcbeil2001@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-dotenv = "^1.0.1"
+langchain-community = "^0.2.5"
+sqlite-vss = "^0.1.2"
+langchain-openai = "^0.1.8"
+langchain-core = "^0.2.9"
+sqlean = "^0.0.3"
+openai = "^1.35.3"
+faiss-cpu = "^1.8.0.post1"
+dbml-sqlite = "^0.3.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
