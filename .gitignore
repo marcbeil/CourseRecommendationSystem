@@ -1,0 +1,6 @@
+.idea
+.env
+**/.DS_Store
+resources/modules.db
+**/**.pyc
+src/scripts/test.ipynb
