@@ -4,8 +4,8 @@
 Table modules {
   module_id integer [pk]
   module_id_uni varchar
-  name varchar
-  org_id varchar [ref: > organisations.org_id]
+  name varchar [not null]
+  org_id varchar [not null, ref: > organisations.org_id]
   level varchar
   lang varchar
   ects integer
@@ -34,8 +34,25 @@ Table organisations {
   name varchar [not null]
   org_type varchar
   parent_org_id varchar [ref: > organisations.org_id]
+  dep_id varchar [ref: > organisations.org_id]
+  school_id varchar [ref: > organisations.org_id]
   link varchar
   homepage varchar
   org_id_tumonline int
   hierarchy int
+}
+
+Table module_prerequisites {
+  module_prerequisite_id integer [pk]
+  module_id_uni integer [not null, ref: > modules.module_id]
+  prereq_module_id_uni integer [ref: > modules.module_id]
+  prereq_module_title varchar
+  is_mandatory boolean
+}
+
+Table other_prerequisites {
+  other_prerequisite_id integer [pk]
+  module_id_uni integer [ref: > modules.module_id]
+  detail_type varchar [not null] // 'knowledge_topic' or 'other_information'
+  detail_text varchar [not null]
 }
