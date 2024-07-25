@@ -13,13 +13,12 @@ class Organisation(Base):
     name = Column(String, nullable=False)
     org_type = Column(String)
     parent_org_id = Column(String, ForeignKey("organisations.org_id"))
+    dep_id = Column(String, ForeignKey("organisations.org_id"))
+    school_id = Column(String, ForeignKey("organisations.org_id"))
     link = Column(String)
     homepage = Column(String)
     org_id_tumonline = Column(Integer)
     hierarchy = Column(Integer)
-
-    parent_org = relationship("Organisation", remote_side=[org_id])
-    children_orgs = relationship("Organisation", back_populates="parent_org")
 
 
 class Module(Base):
@@ -49,7 +48,7 @@ class Module(Base):
         # Optional: Define __repr__ for formal representation
 
     def __repr__(self):
-        return f"<Module(id={self.org_id}, name='{self.name}')>"
+        return f"<Module(id_uni={self.module_id_uni}, name='{self.name}')>"
 
 
 class Topic(Base):
