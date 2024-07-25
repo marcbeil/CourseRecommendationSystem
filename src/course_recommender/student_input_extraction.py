@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -9,11 +10,11 @@ from src.course_recommender.extraction_schema import StudentPreferences
 load_dotenv()
 
 
-
 EXAMPLE_INPUT = "Im a student in my 6th semester currently studying Computer Science at TUM. I already did the following electory courses: ERDB, IT Securiy and Business Analytics and Machine Learning. I really liked Machine Learning and I want to specialize in this subject for my masters. Im also interested in System Design especially in Microservice and Cloud Architecture. I don't like low level programming such as C. I like high level languages such as Java and Python"
 
 
 def extract_student_preferences(student_input=EXAMPLE_INPUT) -> StudentPreferences:
+    logging.info("Extracting Student Input....")
     prompt = ChatPromptTemplate.from_messages(
         [
             (
