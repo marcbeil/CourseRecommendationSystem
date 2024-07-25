@@ -55,3 +55,11 @@ with modules_con:
         modules_con.execute(
             "INSERT INTO module_topic_mappings (module_id, topic_id) VALUES (?, ?)", row
         )
+
+# Clean all prerequisite rows
+
+with modules_con:
+    modules_con.execute(
+        "UPDATE modules SET prereq = '' WHERE upper(prereq) = 'KEINE' or prereq = '-' or upper(prereq) = 'NONE' or upper(prereq) = 'NONE.' or upper(prereq) = 'KEINE.' or upper(prereq) = 'KEIN' or upper(prereq) = 'K.A.' or upper(prereq) = '--' or upper(prereq) = '---' or upper(prereq) = 'NA'"
+    )
+    modules_con.commit()

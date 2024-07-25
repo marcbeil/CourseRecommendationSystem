@@ -28,7 +28,10 @@ def extract_orga_title_link(element):
 
 
 def extract_orga_ids_homepage(org_link):
-    response = requests.get(org_link)
+    try:
+        response = requests.get(org_link)
+    except Exception as e:
+        print(f"Error extracting orga ids for {org_link}: {e}")
     soup = bs4.BeautifulSoup(response.content, "html.parser")
     print(org_link)
     # Find the h3 tag with the subheader "technical description"
