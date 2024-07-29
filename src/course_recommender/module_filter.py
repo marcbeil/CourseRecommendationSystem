@@ -1,14 +1,7 @@
 from itertools import chain
 
 from sqlalchemy import (
-    create_engine,
-    Table,
-    Column,
-    String,
-    MetaData,
     select,
-    cte,
-    text,
     exists,
 )
 from sqlalchemy.sql import and_
@@ -84,7 +77,7 @@ def filter_modules(pref: StudentPreferences):
             .filter(Organisation.name.in_([dep.value for dep in pref.departments]))
             .all()
         )
-        department_ids = map(department_rows, lambda row: row[0])
+        department_ids = map(lambda row: row[0], department_rows)
         filters.append(Organisation.dep_id.in_(department_ids))
 
     if pref.previous_courses:
@@ -184,7 +177,7 @@ pref = StudentPreferences(
     departments=[Department.MATHEMATICS],
     # previous_courses={"Math 101", "CS 201"},
     topics_of_interest=["Dikstra Algorithm"],
-    topics_to_exclude=["Affine space"],
+    # topics_to_exclude=["Affine space"],
 )
 filtered_modules = filter_modules(pref)
 
