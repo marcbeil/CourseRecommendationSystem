@@ -1,0 +1,1 @@
+{"label": "ID", "pattern": [{"TEXT":{"REGEX": "\\b[A-Z]{2}\\d{4,6}\\b"}}]}
