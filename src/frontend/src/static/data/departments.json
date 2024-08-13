@@ -1,0 +1,45 @@
+{
+  "Computation, Information and Technology": [
+    {"id": "TUS1DP1", "name": "Department Mathematics"},
+    {"id": "TUS1DP2", "name": "Department Computer Science"},
+    {"id": "TUS1DP3", "name": "Department Computer Engineering"},
+    {"id": "TUS1DP4", "name": "Department Electrical Engineering"}
+  ],
+  "Engineering and Design": [
+    {"id": "TUS2DP1", "name": "Department Aerospace and Geodesy"},
+    {"id": "TUS2DP2", "name": "Department Architecture"},
+    {"id": "TUS2DP3", "name": "Department Civil and Environmental Engineering"},
+    {"id": "TUS2DP8", "name": "Department Energy and Process Engineering"},
+    {"id": "TUS2DP4", "name": "Department Engineering Physics and Computation"},
+    {"id": "TUS2DP7", "name": "Department Materials Engineering"},
+    {"id": "TUS2DP6", "name": "Department Mechanical Engineering"},
+    {"id": "TUS2DP5", "name": "Department Mobility Systems Engineering"}
+  ],
+  "Life Sciences": [
+    {"id": "TUS4DP1", "name": "Department Molecular Life Sciences"},
+    {"id": "TUS4DP2", "name": "Department Life Science Engineering"},
+    {"id": "TUS4DP3", "name": "Department Life Science Systems"}
+  ],
+  "Management": [
+    {"id": "TUS6DP1", "name": "Department Economics and Policy"},
+    {"id": "TUS6DP2", "name": "Department Finance and Accounting"},
+    {"id": "TUS6DP3", "name": "Department Innovation and Entrepreneurship"},
+    {"id": "TUS6DP4", "name": "Department Marketing, Strategy and Leadership"},
+    {"id": "TUS6DP5", "name": "Department Operations and Technology"}
+  ],
+  "Medicine and Health": [
+    {"id": "TUS5DP1", "name": "Department Health and Sport Sciences"},
+    {"id": "TUS5DP2", "name": "Department Preclinical Medicine"},
+    {"id": "TUS5DP3", "name": "Department Clinical Medicine"}
+  ],
+  "Natural Sciences": [
+    {"id": "TUS3DP1", "name": "Department Physics"},
+    {"id": "TUS3DP2", "name": "Department Bioscience"},
+    {"id": "TUS3DP3", "name": "Department Chemistry"}
+  ],
+  "Social Sciences and Technology": [
+    {"id": "TUS7DP1", "name": "Department Educational Sciences"},
+    {"id": "TUS7DP2", "name": "Department Governance"},
+    {"id": "TUS7DP3", "name": "Department Science, Technology and Society"}
+  ]
+}

@@ -1,0 +1,9 @@
+[
+  {"id": "TUS1000", "name": "Computation, Information and Technology"},
+  {"id": "TUS2000", "name": "Engineering and Design"},
+  {"id": "TUS4000", "name": "Life Sciences"},
+  {"id": "TUS6000", "name": "Management"},
+  {"id": "TUS5000", "name": "Medicine and Health"},
+  {"id": "TUS3000", "name": "Natural Sciences"},
+  {"id": "TUS7000", "name": "Social Sciences and Technology"}
+]
