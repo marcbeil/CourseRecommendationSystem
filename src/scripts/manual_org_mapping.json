@@ -1,0 +1,264 @@
+{
+  "orgs": [
+    {
+      "org_id": "TUSPFSP",
+      "name": "Ehemalige Fakultät für Sport- und Gesundheitswissenschaften",
+      "parent_org_id": "TFS5DP1"
+    },
+    {
+      "org_id": "TUEIFEI",
+      "name": "Ehemalige Fakultät für Elektrotechnik und Informationstechnik",
+      "parent_org_id": "TFS1DP4"
+    },
+    {
+      "org_id": "TUXB301",
+      "name": "Studiengangsbündel Chemie-Studiengänge",
+      "parent_org_id": "TUS3DP3"
+    },
+    {
+      "org_id": "TUZEIO2",
+      "name": "TUM Sprachenzentrum",
+      "parent_org_id": "TAZE100"
+    },
+    {
+      "org_id": "TUXB300",
+      "name": "Studiengangsbündel Professional Profile Physik",
+      "parent_org_id": "TUS3DP1"
+    },
+    {
+      "org_id": "TUMAFMA",
+      "name": "Ehemalige Fakultät für Mathematik",
+      "parent_org_id": "TFS1DP1"
+    },
+    {
+      "org_id": "TUARFAR",
+      "name": "Ehemalige Fakultät für Architektur",
+      "parent_org_id": "TFS2DP2"
+    },
+    {
+      "org_id": "TUINFIN",
+      "name": "Ehemalige Fakultät für Informatik",
+      "parent_org_id": "TFS1DP2"
+    },
+    {
+      "org_id": "TUXB70L",
+      "name": "Studiengangsbündel WTG",
+      "parent_org_id": "TUS7000"
+    },
+    {
+      "org_id": "TUPEIST",
+      "name": "TUM Asia",
+      "parent_org_id": "TU00000"
+    },
+    {
+      "org_id": "TUMWFMW",
+      "name": "Ehemalige Fakultät für Maschinenwesen",
+      "parent_org_id": "TFS2DP6"
+    },
+    {
+      "org_id": "TUXB606",
+      "name": "Studiengangsbündel Executive & Professional Education",
+      "parent_org_id": "TUZELLL"
+    },
+    {
+      "org_id": "TUMEFME",
+      "name": "Ehemalige Fakultät für Medizin",
+      "parent_org_id": "TFS5000"
+    },
+    {
+      "org_id": "TUXB104",
+      "name": "Studiengangsbündel Heilbronn",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB20F",
+      "name": "Schlüsselkompetenzen",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB409",
+      "name": "Studiengangsbündel Brau- und Lebensmitteltechnologie und Bioprozesstechnik",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB40A",
+      "name": "Studiengangsbündel Brauwesen",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB205",
+      "name": "Studiengangsbündel Interdisciplinary Engineering",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUARF07",
+      "name": "Studiendekanat AR",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUWIFWI",
+      "name": "Ehemalige Fakultät für Wirtschaftswissenschaften",
+      "parent_org_id": "TFS6DP1"
+    },
+    {
+      "org_id": "TUXB206",
+      "name": "Studiengangsbündel Mechanical Engineering",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS605",
+      "name": "Studiengang M.Sc. Finance and Information Management",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB601",
+      "name": "Studiengangsbündel School of Management Standort München",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB400",
+      "name": "Studiengangsbündel Agrar- und Gartenbauwissenschaften",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB101",
+      "name": "Studiengangsbündel Elektrotechnik und Informationstechnik",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS601",
+      "name": "Studiengang B.Sc. Technologie- und Managementorientierte Betriebswirtschaftslehre",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXO200",
+      "name": "Studiengangsbündel Mechanical Engineering",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB602",
+      "name": "Studiengangsbündel School of Management Standort Heilbronn",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB40L",
+      "name": "Studiengangsbündel Landschaftsarchitektur und Planung",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB406",
+      "name": "Studiengangsbündel Biologie",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB202",
+      "name": "Studiengangsbündel Civil and Environmental Engineering",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUCSHSW",
+      "name": "HSWT - Professuren",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS30I",
+      "name": "Studiengang TUM School of Natural Sciences (Physik)",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXO400",
+      "name": "TUM School of Life SciencesStudienorganisation",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB40M",
+      "name": "Studiengangsbündel Naturschutz und Ingenieurökologie",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB40K",
+      "name": "Studiengangsbündel Landschaft",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB40G",
+      "name": "Studiengangsbündel Forstwissenschaft und Ressourcenmanagement",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB405",
+      "name": "Studiengangsbündel Biowissenschaften und Biotechnologie",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB401",
+      "name": "Studiengangsbündel Agrarwissenschaften",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB203",
+      "name": "Studiengangsbündel Geodesy",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB201",
+      "name": "Studiengangsbündel Architecture and Design",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUWZA1S",
+      "name": "School Office Praktikantenamt Weihenstephan (LS)",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS609",
+      "name": "Studiengang M.Sc. Management",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS602",
+      "name": "Studiengang M.Sc. Management and Technology",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS40O",
+      "name": "Studiengang M.Sc. Sustainable Ressource Management",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS404",
+      "name": "Studiengang B.Sc. Life Sciences Biologie",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXS30A",
+      "name": "Studiengangsbündel CH/CIW/BC",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB40H",
+      "name": "Studiengangsbündel Forstwissenschaft",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB404",
+      "name": "Studiengangsbündel Ernährungswissenschaft",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TUXB30D",
+      "name": "Studiengangsbündel Gemeinsame Studiengänge TUM/LMU M.Sc. QST/TMP (aus dem Lehrangebot der LMU)",
+      "parent_org_id": ""
+    },
+    {
+      "org_id": "TULRFLR",
+      "name": "Ehemalige Fakultät für Luftfahrt, Raumfahrt und Geodäsie",
+      "parent_org_id": "TFS2DP1"
+    },
+    {
+      "org_id": "TUARZ03",
+      "name": "Design Factory",
+      "parent_org_id": ""
+    }
+  ]
+}

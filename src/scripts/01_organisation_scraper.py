@@ -1,23 +1,13 @@
+import json
 import sqlite3
 
 import bs4
 import requests
 import os
 
-# Change to the appropriate directory
-os.chdir("../../")
-resources_path = "resources"
 
 # Create a new database and execute the DDL script
-modules_con = sqlite3.connect(os.path.join(resources_path, "modules.db"))
-
-
-response = requests.get("https://portal.fis.tum.de/de/organisations/")
-
-soup = bs4.BeautifulSoup(response.content, "html.parser")
-
-level = 0
-element = soup.find(attrs={"data-level": f"{level}"})
+modules_con = sqlite3.connect("../../resources/modules.db")
 
 
 def extract_orga_title_link(element):
@@ -89,4 +79,34 @@ def depth_search(current, parent_org_id, hierarchy):
         depth_search(current=element, parent_org_id=org_id, hierarchy=hierarchy + 1)
 
 
-depth_search(element, None, hierarchy=0)
+def add_missing_courses():
+    with open("./manual_org_mapping.json", "r") as file:
+        mapping = json.load(file)
+    org_rows = []
+    for org in mapping["orgs"]:
+        org_row = (
+            org["org_id"],
+            org["name"],
+            org["parent_org_id"] if org["parent_org_id"] != "" else None,
+        )
+        org_rows.append(org_row)
+    modules_con.executemany(
+        "INSERT OR IGNORE INTO organisations (org_id, name, parent_org_id) VALUES (?,?,?)",
+        org_rows,
+    )
+    modules_con.commit()
+
+
+def main():
+    response = requests.get("https://portal.fis.tum.de/de/organisations/")
+
+    soup = bs4.BeautifulSoup(response.content, "html.parser")
+
+    level = 0
+    element = soup.find(attrs={"data-level": f"{level}"})
+    depth_search(element, None, hierarchy=0)
+    add_missing_courses()
+
+
+if __name__ == "__main__":
+    main()
