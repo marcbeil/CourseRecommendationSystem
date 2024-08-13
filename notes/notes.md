@@ -10,15 +10,15 @@
 
 1. Extraction of Student Input
 2. Filter modules based on student input
-    - [x] School
-    - [] Previous Courses
-    - [x] ECTS
-    - [x] Language Preference
-    - [x] Study Level
+    - [x] School: Selector
+    - [] Previous Courses: List selector (with search field)
+    - [x] ECTS: Selector (range from 1 to 30) 
+    - [x] Language Preference: Selector (English, German, Other)
+    - [x] Study Level: Selector (Bachelor, Master, Other)
+    - - [] Topics
+        - [x] Topics of interest: Text Field
+        - [] Excluded Topics: Text Field
 3. Rank Modules based on prerequisites and topics
-    - [] Topics
-        - [x] Topics of interest
-        - [] Excluded Topics
     - [] Course Prerequisites
     - [] Digitalisierungsgrad
     - Similarity score anzeigen (topic überschneidung)
@@ -105,6 +105,11 @@ This we can do by manually formatting the prerequisites. The manually formatted 
 This test set can be leveraged to improve and validate our automated prerequisite system.
 We will draw n module prerequisites out of the module table that was put in a random order. Then we label the text in the set manually.
 
+- Prodigy Researchers License
+- Label random 10% of dataset (700 prereq tests)
+- String Similarity Metrics for computing similarity for the titles (Levensthtein vs fuzzy search)
+- 
+
 #### Example 
 > MA3301 Numerics of Differential Equations, MA3001 Functional Analysis, programming skills (e.g. MATLAB)
 >
@@ -132,12 +137,19 @@ We can define a regex that matches only these ids:
 If the module id is specified as a prerequisite then it will be easy to link to the module.
 If there is only the module title provided it is hard to find it.
 
+Only using this method is not sufficient because only **900 out of 7000 modules**  where prerequisites are specified contain module_ids. 
+That means we can use this in addition to a different extraction tool.
+
 #### LLM extraction with function calling
 That's where we need a LLM to help us find module titles in the prerequisite text.
 Also it can try to find more information such as whether the course is mandatory or recommended.
 
 Not only course info can be provided by the llm but also other prerequisites 
 such as skills (e.g. basic knowledge in python), knowledge (e.e. Understanding basic concepts of evolution theory) or requirements (willingness to hold a 20-minute presentation in front of the class) can be found by the LLM.
+##### Mapping of extracted titles / ids
+Sometimes the LLM hallucinates IDs, that's why we have to clean that data. First of all, for every id-title-pair we'll have to check whether the id can be found in the database. Then we need to check if the title is to some extend similar to the title the id corresponds to.  
+If it does, than we can add an entry. If not we need to check if the title exists somewhere else in the database. 
+
 
 #### Training own model
 
