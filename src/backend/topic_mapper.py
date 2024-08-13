@@ -4,7 +4,7 @@ import numpy as np
 from dotenv import load_dotenv
 from openai import OpenAI
 from sqlalchemy import func
-from backend.models import Session, Topic
+from backend.db_models import Session, Topic
 
 load_dotenv()
 

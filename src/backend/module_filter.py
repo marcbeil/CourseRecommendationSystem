@@ -13,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-from backend.models import (
+from backend.db_models import (
     Session,
     Module,
     Organisation,
