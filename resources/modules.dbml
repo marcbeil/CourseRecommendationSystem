@@ -16,6 +16,7 @@ Table modules {
   link varchar
   link_type varchar
   digital_score int
+  name_embedding blob
 }
 
 Table topics {
@@ -48,6 +49,13 @@ Table module_prerequisites {
   prereq_module_id_uni integer [ref: > modules.module_id]
   prereq_module_title varchar
   is_mandatory boolean
+  extraction_method varchar
+}
+
+Table prerequisite_mapping {
+    module_id_uni varchar [not null]
+    prerequisite_module_id_uni varchar [not null]
+    module_prerequisite_id [int, ref: > module_prerequisites.module_prerequisite_id]
 }
 
 Table other_prerequisites {
