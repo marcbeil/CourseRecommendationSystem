@@ -11,6 +11,7 @@ from backend.module_filter import (
     apply_filters,
     modules_by_id,
 )
+from backend.module_ranker import rank_modules
 from backend.student_input_extraction import extract_student_preferences
 from backend.topic_mapper import VectorStore
 
@@ -20,9 +21,19 @@ app = Flask(__name__)
 CORS(app)
 
 
-vectorstore = VectorStore(max_size=2000)
+vectorstore = VectorStore(max_size=100)
 
+def add_reasoning(ranked_modules, paginated_modules):
+    # Step 1: Create a mapping of module_id to reasoning
+    reasoning_map = {module.module_id: module.reasoning for module in ranked_modules}
 
+    # Step 2: Update paginated modules with the reasoning field
+    for module in paginated_modules:
+        module_id = module.get('id')
+        if module_id in reasoning_map.keys():
+            module['reasoning'] = reasoning_map[module_id]
+        else:
+            module['reasoning'] = "No reasoning available"  # Optional: handle case where no reasoning is found
 @app.get("/modules")
 def get_modules():
     # Extract query parameters for filtering and pagination
@@ -63,7 +74,9 @@ def get_modules():
     paginated_modules = filtered_modules[start:end]
     # Calculate total pages
     total_pages = (total_modules + size - 1) // size
-
+    ranked_modules = rank_modules(student_input="Im a student in my 6th semester currently studying Computer Science at TUM. I already did the following electory courses: ERDB, IT Securiy and Business Analytics and Machine Learning. I really liked Machine Learning and I want to specialize in this subject for my masters. Im also interested in System Design especially in Microservice and Cloud Architecture. I don't like low level programming such as C. I like high level languages such as Java and Python", modules=str(paginated_modules))
+    add_reasoning(ranked_modules, paginated_modules)
+    print(paginated_modules)
     # Return the paginated and filtered modules with metadata
     return jsonify(
         {
