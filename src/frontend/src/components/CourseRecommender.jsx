@@ -32,7 +32,7 @@ import SearchPreviousModules from "./SearchPreviosModules";
 const CourseRecommender = () => {
     const location = useLocation();  // Get the passed state
     const filtersFromState = location.state || {};  // Use an empty object if no state is passed
-
+    const studentText = filtersFromState.studentText
     const [school, setSchool] = useState(filtersFromState.school || '');
     const [departments, setDepartments] = useState(filtersFromState.departments || []);
     const [studyLevel, setStudyLevel] = useState(filtersFromState.studyLevel || '');
@@ -56,6 +56,7 @@ const CourseRecommender = () => {
 
 
     const handleSchoolChange = (event) => {
+        console.log(studentText)
         const selectedSchool = event.target.value;
         setSchool(selectedSchool);
 
@@ -155,6 +156,14 @@ const CourseRecommender = () => {
         <Typography variant="h4" gutterBottom>
             Friendly Course Recommender
         </Typography>
+        <Box marginY={4}>
+            <Typography variant="h6" gutterBottom>
+                Original Input
+            </Typography>
+            <Typography gutterBottom>
+                {studentText}
+            </Typography>
+        </Box>
         <Box margin="normal">
             <FormControl fullWidth margin="normal">
                 <InputLabel>School</InputLabel>

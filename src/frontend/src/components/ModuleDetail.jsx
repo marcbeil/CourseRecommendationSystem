@@ -38,6 +38,9 @@ const ModuleDetail = ({selectedModule, topicsOfInterest}) => {
             <Typography variant="body1" gutterBottom>
                 {selectedModule.description}
             </Typography>
+            <Typography variant="body1" gutterBottom>
+                <strong>LLM reasoning:</strong> {selectedModule.reasoning}
+            </Typography>
             <Typography variant="body2" gutterBottom>
                 <strong>Prerequisites:</strong> {selectedModule.prereq}
             </Typography>

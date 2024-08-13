@@ -13,7 +13,7 @@ import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 
 const StudyPreferencesForm = () => {
-    const [preferences, setPreferences] = useState('');
+    const [studentText, setStudentText] = useState('');
     const [suggestedFilters, setSuggestedFilters] = useState({
         major: '',
         minor: '',
@@ -36,7 +36,7 @@ const StudyPreferencesForm = () => {
 
         try {
             const response = await axios.post('http://localhost:8080/start-extraction', {
-                text: preferences
+                text: studentText
             });
 
             if (response.data.success) {
@@ -51,8 +51,13 @@ const StudyPreferencesForm = () => {
     };
 
     const handleContinue = () => {
-        navigate("/", {state: suggestedFilters});  // Redirect to CourseRecommender with filters in state
+        const stateToPass = {
+            ...suggestedFilters,
+            studentText: studentText,  // Add studentText to the state
+        };
+        navigate("/", {state: stateToPass});  // Redirect to CourseRecommender with the combined state
     };
+
 
     return (
         <Container maxWidth="md" sx={{mt: 4, mb: 4}}>
@@ -79,8 +84,8 @@ const StudyPreferencesForm = () => {
                     fullWidth
                     multiline
                     rows={4}
-                    value={preferences}
-                    onChange={(e) => setPreferences(e.target.value)}
+                    value={studentText}
+                    onChange={(e) => setStudentText(e.target.value)}
                     sx={{mb: 2}}
                 />
                 <Button type="submit" variant="contained" color="primary">
