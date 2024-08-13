@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, BLOB, create_engine
-from sqlalchemy.orm import relationship, sessionmaker, declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey, BLOB, create_engine
+from sqlalchemy.orm import relationship, sessionmaker, declarative_base, joinedload
 
 load_dotenv()
 Base = declarative_base()
@@ -43,9 +43,6 @@ class Module(Base):
 
     def __str__(self):
         return f"Module(id={self.module_id}, name='{self.name}', lang='{self.lang}', level='{self.level}', org_id={self.org_id})"
-        # Customize the output format based on your Module class attributes
-
-        # Optional: Define __repr__ for formal representation
 
     def __repr__(self):
         return f"<Module(id_uni={self.module_id_uni}, name='{self.name}')>"
@@ -70,6 +67,15 @@ class ModuleTopicMapping(Base):
 
     module = relationship("Module", back_populates="topics")
     topic = relationship("Topic", back_populates="modules")
+
+
+class ModulePrerequisiteMapping(Base):
+    __tablename__ = "module_prerequisite_mappings"
+    module_prerequisite_mapping_id = Column(Integer, primary_key=True)
+    module_id_uni = Column(String, ForeignKey("module.module_id_uni"))
+    prereq_module_id_uni = Column(String, ForeignKey("module.module_id_uni"))
+    extracted_module_identifier_id = Column(Integer)
+    score = Column(Integer)
 
 
 # Connect to the existing database

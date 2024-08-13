@@ -5,7 +5,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
-from src.course_recommender.extraction_schema import StudentPreferences
+from src.backend.extraction_schema import StudentPreferences
 
 load_dotenv()
 
@@ -35,4 +35,4 @@ def extract_student_preferences(student_input=EXAMPLE_INPUT) -> StudentPreferenc
 
     runnable = prompt | llm.with_structured_output(schema=StudentPreferences)
 
-    return runnable.invoke(student_input)
+    return runnable.invoke(student_input).to_json()
