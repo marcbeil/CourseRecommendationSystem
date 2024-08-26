@@ -45,8 +45,12 @@ def add_reasoning(ranked_modules, paginated_modules):
 def get_modules():
     # Extract query parameters for filtering and pagination
     study_level = request.args.get("studyLevel", "")
-    ects_min = request.args.get("ectsRange[0]", type=int, default=1)
-    ects_max = request.args.get("ectsRange[1]", type=int, default=30)
+    ects_range = request.args.getlist("ectsRange[]", type=int)
+    ects_min = ects_range[0] if len(ects_range) > 0 else 0
+    ects_max = ects_range[1] if len(ects_range) > 1 else 4
+    digital_score_range = request.args.getlist("digitalScoreRange[]", type=int)
+    digital_score_min = digital_score_range[0] if len(digital_score_range) > 0 else 0
+    digital_score_max = digital_score_range[1] if len(digital_score_range) > 1 else 4
     languages = request.args.getlist("languages[]")
     departments = request.args.getlist("departments[]")
     topics_of_interest = request.args.getlist("topicsOfInterest[]")
@@ -63,12 +67,15 @@ def get_modules():
     topics_of_interest = tuple(topics_of_interest) if topics_of_interest else None
     topics_to_exclude = tuple(topics_to_exclude) if topics_to_exclude else None
     schools = tuple(schools) if schools else None
+    logging.info(f"{digital_score_min=}, {digital_score_max=}")
     # Call apply_filters with individual arguments
     filtered_modules = apply_filters(
         schools=schools,
         study_level=study_level,
         ects_min=ects_min,
         ects_max=ects_max,
+        digital_score_min=digital_score_min,
+        digital_score_max=digital_score_max,
         module_languages=languages,
         departments=departments,
         previous_modules=previous_modules,

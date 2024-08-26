@@ -94,6 +94,8 @@ def apply_filters(
     study_level=None,
     ects_min=None,
     ects_max=None,
+    digital_score_min=None,
+    digital_score_max=None,
     module_languages=None,
     departments=None,
     previous_modules=None,
@@ -148,6 +150,12 @@ def apply_filters(
 
     if ects_max is not None:
         filters_and.append(Module.ects <= ects_max)
+
+    if digital_score_min:
+        filters_and.append(Module.digital_score >= digital_score_min)
+
+    if digital_score_max:
+        filters_and.append(Module.digital_score <= digital_score_max)
 
     if schools:
         school_ids = [school_mapper[school] for school in schools]
