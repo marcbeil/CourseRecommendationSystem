@@ -212,6 +212,18 @@ const CourseRecommender = () => {
         handleRefresh(value); // Refresh data with the new page number
     };
 
+    const handleClearFilters = () => {
+        setSchools([]);
+        setDepartments({});
+        setStudyLevel('');
+        setEctsRange([1, 30]);
+        setLanguages([]);
+        setTopicsOfInterest({});
+        setExcludedTopics({});
+        setPreviousModules([]);
+    };
+
+
     const handleModuleClick = (module) => {
         setSelectedModule(module);
     };
@@ -374,6 +386,15 @@ const CourseRecommender = () => {
                             setPreviousModules={setPreviousModules}
                         />
                     </Box>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        fullWidth
+                        sx={{mt: 2, mb: 2}}
+                        onClick={handleClearFilters}
+                    >
+                        Clear All Filters
+                    </Button>
                     <Button
                         variant="contained"
                         color="primary"
