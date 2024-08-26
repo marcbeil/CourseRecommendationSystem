@@ -1,3 +1,4 @@
+import math
 import sqlite3
 import pandas as pd
 from rapidfuzz import process, fuzz
@@ -60,10 +61,10 @@ def get_test_set(db):
     return test_set
 
 
-def get_extracted_data(modules_con, test_set_module_ids):
+def get_extracted_data(modules_con, test_set_module_ids, score_threshold):
     placeholders = ",".join("?" for _ in test_set_module_ids)
     extracted_rows = modules_con.execute(
-        f"SELECT module_id_uni, identifier, identifier_type FROM extracted_module_identifiers emi WHERE module_id_uni IN ({placeholders}) and exists(SELECT * FROM module_prerequisite_mappings mpm where emi.extracted_module_identifier_id = mpm.extracted_module_identifier_id and (score is null or score > 80))",
+        f"SELECT module_id_uni, identifier, identifier_type FROM extracted_module_identifiers emi WHERE module_id_uni IN ({placeholders}) and exists(SELECT * FROM module_prerequisite_mappings mpm where emi.extracted_module_identifier_id = mpm.extracted_module_identifier_id and (score is null or score > {score_threshold}))",
         tuple(test_set_module_ids),
     )
     extracted_data = {}
@@ -134,25 +135,35 @@ def calculate_metrics(df):
             "Precision": precision_TITLE,
             "Recall": recall_TITLE,
             "Accuracy": accuracy_TITLE,
+            "COMBINED": {
+                "Precision": (precision_TITLE + precision_ID) * 0.5,
+                "Recall": (recall_TITLE + recall_ID) * 0.5,
+                "Accuracy": (accuracy_TITLE + accuracy_ID) * 0.5,
+            },
         },
     }
 
 
-def main():
+def main(score_threshold=0):
     db = connect()
     test_set = get_test_set(db)
     test_set_module_ids = set(
         map(lambda prereq: prereq["meta"]["module_id_uni"], test_set)
     )
     modules_con = sqlite3.connect("../../resources/modules.db")
-    extracted_data = get_extracted_data(modules_con, test_set_module_ids)
+    extracted_data = get_extracted_data(
+        modules_con, test_set_module_ids, score_threshold=score_threshold
+    )
     df = prepare_dataframe(test_set, extracted_data)
     metrics = calculate_metrics(df)
-    print(metrics)
+    print(f"{score_threshold=}:\n{metrics}")
 
 
 if __name__ == "__main__":
-    main()
+    main(0)
+    main(70)
+    main(80)
+    main(90)
 
 
 # {'ID': {'Precision': 0.9727891156462585, 'Recall': 0.6941747572815534, 'Accuracy': 0.680952380952381}, 'TITLE': {'Precision': 0.6594360086767896, 'Recall': 0.6565874730021598, 'Accuracy': 0.49032258064516127}}

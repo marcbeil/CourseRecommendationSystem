@@ -157,13 +157,7 @@ const CourseRecommender = () => {
 
         const filters = {
             schools,
-            departments: Object.entries(departments).flatMap(([school, depts]) => {
-                // Ensure depts is an array before mapping over it
-                if (Array.isArray(depts)) {
-                    return depts.map(dept => ({school, dept}));
-                }
-                return [];  // Return an empty array if depts is not valid
-            }),
+            departments: Object.values(departments).flat(),
             studyLevel,
             ectsRange,
             languages,
@@ -172,7 +166,6 @@ const CourseRecommender = () => {
             previousModules: previousModules.map((module) => module.id),
             studentText
         };
-
         const response = await fetchModules(filters, page);  // Pass the page argument to fetchModules
         if (response) {
             setModules(response.modules);
@@ -297,8 +290,6 @@ const CourseRecommender = () => {
                             <Box
                                 display="flex"
                                 flexWrap="nowrap"
-                                overflowX="auto"
-                                overflowY="hidden"
                                 maxWidth="100%"
                                 alignItems="center"
                                 gap={1}

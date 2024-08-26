@@ -1,9 +1,9 @@
+# Map the extracted module ids / titles to already existing titles / ids in the db
 import os
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from difflib import SequenceMatcher
 from functools import lru_cache
-import numpy as np
 from rapidfuzz import fuzz
 from dotenv import load_dotenv
 
@@ -86,7 +86,7 @@ def process_emi_row(emi_row, all_module_ids_and_titles):
         key=lambda module_id_title_score: module_id_title_score[2],
     )
 
-    if target_module[2] > 80:
+    if target_module[2] > 70:
         return (
             module_id_uni,
             target_module[0],
