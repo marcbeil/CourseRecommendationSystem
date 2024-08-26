@@ -52,6 +52,9 @@ const CourseRecommender = () => {
     const [pageSize, setPageSize] = useState(15);
     const [showFilters, setShowFilters] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -121,6 +124,9 @@ const CourseRecommender = () => {
         });
     };
 
+    const handleAccordionChange = () => {
+        setExpanded(!expanded);
+    };
 
     const handleStudyLevelChange = (event) => {
         setStudyLevel(event.target.value);
@@ -264,9 +270,9 @@ const CourseRecommender = () => {
             </Box>
         </Box>
 
-        {showFilters && <Box paddingY={2}> <Accordion>
+        {showFilters && <Box paddingY={2}> <Accordion expanded={expanded} onChange={handleAccordionChange}>
             <AccordionSummary>
-                Show Filters
+                {expanded ? 'Hide Filters' : 'Show Filters'}
             </AccordionSummary>
             <AccordionDetails>
                 <Box margin="normal">
@@ -358,7 +364,7 @@ const CourseRecommender = () => {
                         {/* Sliders on the Right in Two Rows */}
                         <Box sx={{flex: 1, ml: 2}}>
                             <Box my={2} sx={{mb: 4}}>
-                                <Typography component="legend" >ECTS Range (1-30)</Typography>
+                                <Typography component="legend">ECTS Range (1-30)</Typography>
                                 <Slider
                                     value={ectsRange}
                                     onChange={handleEctsRangeChange}
@@ -369,7 +375,7 @@ const CourseRecommender = () => {
                                 />
                             </Box>
                             <Box my={2} sx={{mb: 4}}>
-                                <Typography component="legend" >Digital Score Range (0-4)</Typography>
+                                <Typography component="legend">Digital Score Range (0-4)</Typography>
                                 <Slider
                                     value={digitalScoreRange}
                                     onChange={handleDigitalScoreRange}
