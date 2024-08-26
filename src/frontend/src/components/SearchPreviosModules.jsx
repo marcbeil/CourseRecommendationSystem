@@ -43,6 +43,21 @@ const SearchPreviousModules = ({previousModules, setPreviousModules}) => {
 
     return (
         <Box>
+            <Typography component="legend">Previous Modules</Typography>
+            <List>
+                {previousModules.map((module, index) => (
+                    <ListItem key={index}
+                              secondaryAction={
+                                  <IconButton edge="end" aria-label="delete"
+                                              onClick={() => handleRemovePreviousModule(index)}>
+                                      <CloseIcon/>
+                                  </IconButton>
+                              }
+                    >
+                        <ListItemText primary={`${module.id} - ${module.title}`}/>
+                    </ListItem>
+                ))}
+            </List>
             <TextField
                 label="Add Previous Modules by ID or Name"
                 variant="outlined"
@@ -63,21 +78,6 @@ const SearchPreviousModules = ({previousModules, setPreviousModules}) => {
                 ))}
             </List>
 
-
-            <List>
-                {previousModules.map((module, index) => (
-                    <ListItem key={index}
-                              secondaryAction={
-                                  <IconButton edge="end" aria-label="delete"
-                                              onClick={() => handleRemovePreviousModule(index)}>
-                                      <CloseIcon/>
-                                  </IconButton>
-                              }
-                    >
-                        <ListItemText primary={`${module.id} - ${module.title}`}/>
-                    </ListItem>
-                ))}
-            </List>
 
         </Box>
     );

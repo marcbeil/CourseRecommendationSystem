@@ -63,11 +63,9 @@ def get_modules():
     languages = tuple(languages) if languages else None
     departments = tuple(departments) if departments else None
     previous_modules = tuple(previous_modules) if previous_modules else None
-    logging.info(f"TEST {previous_modules=}")
     topics_of_interest = tuple(topics_of_interest) if topics_of_interest else None
     topics_to_exclude = tuple(topics_to_exclude) if topics_to_exclude else None
     schools = tuple(schools) if schools else None
-    logging.info(f"{digital_score_min=}, {digital_score_max=}")
     # Call apply_filters with individual arguments
     filtered_modules = apply_filters(
         schools=schools,
@@ -89,7 +87,6 @@ def get_modules():
     paginated_modules = filtered_modules[start:end]
     # Calculate total pages
     total_pages = (total_modules + size - 1) // size
-    logging.info(f"{student_text=}")
     if paginated_modules and student_text:
         ranked_modules = rank_modules(
             student_input=student_text,

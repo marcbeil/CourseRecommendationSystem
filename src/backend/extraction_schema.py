@@ -4,61 +4,19 @@ from typing import Optional, Set, Dict
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 
-class Major(Enum):
-    COMPUTER_SCIENCE = "Computer Science"
-    MATHEMATICS = "Mathematics"
-    INFORMATION_SYSTEMS = "Information Systems"
-    MEDICINE = "Medicine"
-    ECONOMICS = "Economics"
-
-    @staticmethod
-    def values():
-        return [major.value for major in Major]
-
-
+# class Major(Enum):
+#     COMPUTER_SCIENCE = "Computer Science"
+#     MATHEMATICS = "Mathematics"
+#     INFORMATION_SYSTEMS = "Information Systems"
+#     MEDICINE = "Medicine"
+#     ECONOMICS = "Economics"
+#
 class StudyLevel(Enum):
     BACHELOR = "Bachelor"
     MASTER = "Master"
     DOCTOR = "Doctor"
     OTHER = "Other"
     UNKNOWN = "Unknown"
-
-    @staticmethod
-    def values():
-        return [level.value for level in StudyLevel]
-
-    def get_level_filter(self):
-        default_level = ["Unknown"]
-        match self:
-            case StudyLevel.BACHELOR:
-                return ["Bachelor", "Bachelor/Master"] + default_level
-            case StudyLevel.MASTER:
-                return ["Bachelor", "Bachelor/Master", "Master"] + default_level
-            case _:
-                return default_level
-
-
-"""
-# Retrieve all Departments from db
-session = Session()
-department_rows = (
-    session.query(Organisation.name)
-    .filter(Organisation.org_type == "department")
-    .distinct()
-    .all()
-)
-departments = [
-    (department[0].removeprefix("Department ").upper(), department[0])
-    for department in department_rows
-]
-print(
-    "\n".join(
-        sorted(
-            [f'{k.replace(",", "").replace(" ", "_")} = "{v}"' for k, v in departments]
-        )
-    )
-)
-"""
 
 
 class Department(Enum):
@@ -106,50 +64,35 @@ class School(Enum):
     MANAGEMENT = "Management"
     SOCIAL_SCIENCES_TECHNOLOGY = "Social Sciences and Technology"
 
-    @staticmethod
-    def values():
-        return [school.value for school in School]
-
 
 class ModuleLanguage(Enum):
     GERMAN = "German"
     ENGLISH = "English"
     OTHER = "Other"
 
-    @staticmethod
-    def values():
-        return [lang.value for lang in ModuleLanguage]
-
-    @staticmethod
-    def get_filters(languages: []):
-        default_filters = set("Unknown")
-        for lang in languages:
-            default_filters.add(lang.value)
-        if ModuleLanguage.GERMAN in languages and ModuleLanguage.ENGLISH in languages:
-            default_filters.add("German/English")
-        return default_filters
-
 
 class StudentPreferences(BaseModel):
     """Student Message about his current state of studies"""
 
-    major: Optional[str] = Field(
-        description="Major subject of the student",
-        examples=[
-            "Computer Science",
-            "Mechanical Enginieering",
-            "Mathematics",
-            "Information Systems",
-            "Medicine",
-            "Economics",
-        ],
-    )
-    minor: Optional[str] = Field(description="Minor subject of the student")
+    #
+    # major: Optional[str] = Field(
+    #     description="Major subject of the student",
+    #     examples=[
+    #         "Computer Science",
+    #         "Mechanical Enginieering",
+    #         "Mathematics",
+    #         "Information Systems",
+    #         "Medicine",
+    #         "Economics",
+    #     ],
+    # )
+    # minor: Optional[str] = Field(description="Minor subject of the student")
     study_level: Optional[StudyLevel] = Field(
         description="Degree the student is pursuing. Select one level out of the provided ones"
     )
     schools: Set[School] = Field(
-        description="School the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair. Assign the student to at least one of the schools in the examples if he hasn't specified a school. You can use the major to identify the school"
+        description="School the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair. Assign the student to at least one of the schools in the examples if he hasn't specified a school. You can use the major to identify the school",
+        default={},
     )
 
     departments: Set[Department] = Field(
@@ -180,7 +123,7 @@ class StudentPreferences(BaseModel):
 
     module_languages: Set[ModuleLanguage] = Field(
         default={},
-        description="Course language preference of the student. That is the language that is used to teach the course.",
+        description="Course language preference of the student. That is the language that is used to teach the course. DO NOT infer the language from the provided student input",
     )
 
     def to_json(self) -> Dict:

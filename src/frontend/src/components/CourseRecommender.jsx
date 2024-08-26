@@ -59,6 +59,7 @@ const CourseRecommender = () => {
                 setShowFilters(true)
                 handleRefresh()
             } else {
+                setLoading(true);  // Start loading
                 const response = await axios.post('http://localhost:8080/start-extraction', {
                     text: studentText
                 });
@@ -215,7 +216,7 @@ const CourseRecommender = () => {
         setTopicsOfInterest({});
         setExcludedTopics({});
         setPreviousModules([]);
-        setDigitalScoreRange([0,4])
+        setDigitalScoreRange([0, 4])
     };
 
 
@@ -357,7 +358,7 @@ const CourseRecommender = () => {
                         {/* Sliders on the Right in Two Rows */}
                         <Box sx={{flex: 1, ml: 2}}>
                             <Box my={2} sx={{mb: 4}}>
-                                <Typography gutterBottom>ECTS Range (1-30)</Typography>
+                                <Typography component="legend" >ECTS Range (1-30)</Typography>
                                 <Slider
                                     value={ectsRange}
                                     onChange={handleEctsRangeChange}
@@ -368,7 +369,7 @@ const CourseRecommender = () => {
                                 />
                             </Box>
                             <Box my={2} sx={{mb: 4}}>
-                                <Typography gutterBottom>Digital Score Range (0-4)</Typography>
+                                <Typography component="legend" >Digital Score Range (0-4)</Typography>
                                 <Slider
                                     value={digitalScoreRange}
                                     onChange={handleDigitalScoreRange}
@@ -381,7 +382,7 @@ const CourseRecommender = () => {
                         </Box>
                     </Box>
 
-
+                    <Typography component="legend">Topics</Typography>
                     <Box sx={{mb: 2}}>
                         <TopicChips
                             topics={topicsOfInterest}

@@ -1,3 +1,4 @@
+import itertools
 from functools import lru_cache
 from sqlalchemy import (
     func,
@@ -22,6 +23,19 @@ from backend.db_models import (
     Topic,
     ModulePrerequisiteMapping,
 )
+
+
+language_mapper = {
+    "English": ("English", "German/English", "Unknown"),
+    "German": ("German", "German/English", "Unknown"),
+    "Other": ("Other", "Unknown"),
+}
+
+study_level_mapper = {
+    "Bachelor": ("Bachelor", "Bachelor/Master", "Unknown"),
+    "Master": ("Bachelor/Master", "Unknown", "Master"),
+    "Other": ("Bachelor/Master", "Unknown", "Master", "Bachelor"),
+}
 
 school_mapper = {
     "Computation, Information and Technology": "TUS1000",
@@ -140,15 +154,21 @@ def apply_filters(
     filters_and = []
     filters_or = []
     if module_languages:
-        filters_and.append(Module.lang.in_(module_languages))
+        languages_mapped = set(
+            itertools.chain.from_iterable(
+                [language_mapper[lang] for lang in module_languages]
+            )
+        )
+        filters_and.append(Module.lang.in_(languages_mapped))
 
     if study_level:
-        filters_and.append(Module.level == study_level)
+        study_levels = study_level_mapper[study_level]
+        filters_and.append(Module.level.in_(study_levels))
 
-    if ects_min is not None:
+    if ects_min:
         filters_and.append(Module.ects >= ects_min)
 
-    if ects_max is not None:
+    if ects_max:
         filters_and.append(Module.ects <= ects_max)
 
     if digital_score_min:
@@ -199,7 +219,6 @@ def apply_filters(
 
     if topics_to_exclude:
         filters_and.append(~Topic.topic.in_(topics_to_exclude))
-
     # Apply filters only if they exist
     if filters_and:
         query = query.filter(or_(and_(*filters_and), *filters_or))
