@@ -18,8 +18,8 @@ import {
     MenuItem,
     Pagination,
     Select,
-    Slider,
-    TextField,
+    Slider, styled,
+    TextField, Tooltip,
     Typography
 } from '@mui/material';
 import {Chip, Paper, IconButton} from '@mui/material';
@@ -40,6 +40,7 @@ const CourseRecommender = () => {
     const [departments, setDepartments] = useState({});  // Updated to hold departments for each school
     const [studyLevel, setStudyLevel] = useState('');
     const [ectsRange, setEctsRange] = useState([1, 30]);
+    const [digitalScoreRange, setDigitalScoreRange] = useState([0, 4])
     const [languages, setLanguages] = useState(languagesData);
     const [topicsOfInterest, setTopicsOfInterest] = useState({});
     const [excludedTopics, setExcludedTopics] = useState({});
@@ -51,8 +52,6 @@ const CourseRecommender = () => {
     const [pageSize, setPageSize] = useState(15);
     const [showFilters, setShowFilters] = useState(false)
     const [loading, setLoading] = useState(false);
-
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -76,7 +75,6 @@ const CourseRecommender = () => {
                     setExcludedTopics(filters.topicsToExclude || {});
                     setPreviousModules(filters.previousModules || []);
                     setLanguages(filters.languages || []);
-
                     setShowFilters(true);
                     handleRefresh()
                 } else {
@@ -130,7 +128,9 @@ const CourseRecommender = () => {
     const handleEctsRangeChange = (event, newValue) => {
         setEctsRange(newValue);
     };
-
+    const handleDigitalScoreRange = (event, newValue) => {
+        setDigitalScoreRange(newValue);
+    };
     const handleLanguageChange = (event) => {
         const {value} = event.target;
         setLanguages((prev) => prev.includes(value) ? prev.filter((id) => id !== value) : [...prev, value]);
@@ -160,6 +160,7 @@ const CourseRecommender = () => {
             departments: Object.values(departments).flat(),
             studyLevel,
             ectsRange,
+            digitalScoreRange,
             languages,
             topicsOfInterest,
             excludedTopics,
@@ -210,10 +211,11 @@ const CourseRecommender = () => {
         setDepartments({});
         setStudyLevel('');
         setEctsRange([1, 30]);
-        setLanguages([]);
+        setLanguages(languagesData);
         setTopicsOfInterest({});
         setExcludedTopics({});
         setPreviousModules([]);
+        setDigitalScoreRange([0,4])
     };
 
 
@@ -331,31 +333,55 @@ const CourseRecommender = () => {
                             </MenuItem>))}
                         </Select>
                     </FormControl>
-                    <Box my={2} sx={{mb: 4}}>
-                        <Typography gutterBottom>ECTS Range</Typography>
-                        <Slider
-                            value={ectsRange}
-                            onChange={handleEctsRangeChange}
-                            valueLabelDisplay="auto"
-                            disableSwap={true}
-                            min={1}
-                            max={30}
-                        />
+                    <Box display="flex" sx={{mb: 4}}>
+                        {/* Language Preference on the Left */}
+                        <FormControl component="fieldset" fullWidth margin="normal" sx={{mb: 2, flex: 1}}>
+                            <Typography component="legend">Language Preference</Typography>
+                            <FormGroup>
+                                {languagesData.map((lang) => (
+                                    <FormControlLabel
+                                        key={lang}
+                                        control={
+                                            <Checkbox
+                                                checked={languages.includes(lang)}
+                                                onChange={handleLanguageChange}
+                                                value={lang}
+                                            />
+                                        }
+                                        label={lang}
+                                    />
+                                ))}
+                            </FormGroup>
+                        </FormControl>
+
+                        {/* Sliders on the Right in Two Rows */}
+                        <Box sx={{flex: 1, ml: 2}}>
+                            <Box my={2} sx={{mb: 4}}>
+                                <Typography gutterBottom>ECTS Range (1-30)</Typography>
+                                <Slider
+                                    value={ectsRange}
+                                    onChange={handleEctsRangeChange}
+                                    valueLabelDisplay="auto"
+                                    disableSwap={true}
+                                    min={1}
+                                    max={30}
+                                />
+                            </Box>
+                            <Box my={2} sx={{mb: 4}}>
+                                <Typography gutterBottom>Digital Score Range (0-4)</Typography>
+                                <Slider
+                                    value={digitalScoreRange}
+                                    onChange={handleDigitalScoreRange}
+                                    valueLabelDisplay="auto"
+                                    disableSwap={true}
+                                    min={1}
+                                    max={4}
+                                />
+                            </Box>
+                        </Box>
                     </Box>
-                    <FormControl component="fieldset" fullWidth margin="normal" sx={{mb: 2}}>
-                        <Typography component="legend">Language Preference</Typography>
-                        <FormGroup row>
-                            {languagesData.map((lang) => (<FormControlLabel
-                                key={lang}
-                                control={<Checkbox
-                                    checked={languages.includes(lang)}
-                                    onChange={handleLanguageChange}
-                                    value={lang}
-                                />}
-                                label={lang}
-                            />))}
-                        </FormGroup>
-                    </FormControl>
+
+
                     <Box sx={{mb: 2}}>
                         <TopicChips
                             topics={topicsOfInterest}
