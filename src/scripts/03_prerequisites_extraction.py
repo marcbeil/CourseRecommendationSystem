@@ -1,6 +1,5 @@
-import json
+# Goal is to extract module ids as well as titles out of the unstructured prerequisite texts.
 import sqlite3
-from enum import Enum
 from typing import Optional, List
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from ratelimit import limits, sleep_and_retry
@@ -53,7 +52,7 @@ def extract_module_ids_titles_llm(module_prerequisites: str) -> ModuleIdentifier
         ]
     )
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
     runnable = prompt | llm.with_structured_output(schema=ModuleIdentifiers)
 

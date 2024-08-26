@@ -50,7 +50,7 @@ mapping_query = """CREATE TEMP TABLE temp_parents AS
 WITH RECURSIVE
     school_mapping AS (SELECT org_id, org_id as school_id
                        FROM organisations
-                       WHERE hierarchy = 1
+                       WHERE hierarchy = 2
                          AND org_id LIKE 'TUS%'
                        UNION ALL
                        SELECT o2.org_id, p.school_id
@@ -59,7 +59,7 @@ WITH RECURSIVE
                        WHERE o2.parent_org_id = p.org_id),
     department_mapping AS (SELECT org_id, org_id as dep_id
                            FROM organisations
-                           WHERE hierarchy = 2
+                           WHERE hierarchy = 3
                              AND org_id LIKE 'TUS%DP%'
                              AND name LIKE 'Department%'
                            UNION ALL
@@ -85,3 +85,4 @@ modules_con.execute(mapping_query)
 modules_con.execute(update_orgs_query)
 modules_con.execute(drop_temp_table_query)
 modules_con.commit()
+

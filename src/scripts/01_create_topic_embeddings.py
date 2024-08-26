@@ -1,3 +1,4 @@
+# This creates the topic embeddings which are used to find similar topics
 import json
 import sqlite3
 

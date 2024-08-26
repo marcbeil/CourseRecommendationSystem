@@ -1,9 +1,9 @@
+# Used to scrape all the organisations
 import json
 import sqlite3
 
 import bs4
 import requests
-import os
 
 
 # Create a new database and execute the DDL script

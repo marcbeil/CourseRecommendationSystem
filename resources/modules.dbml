@@ -1,6 +1,3 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
-
 Table modules {
   module_id integer [pk]
   module_id_uni varchar
@@ -17,17 +14,15 @@ Table modules {
   link_type varchar
   digital_score int
   name_embedding blob
+  indexes {
+    (module_id_uni) [unique]
+  }
 }
 
 Table topics {
   topic_id integer [pk]
   topic varchar [not null]
   embedding blob
-}
-
-Table module_topic_mappings {
-  module_id integer [ref: > modules.module_id]
-  topic_id integer [ref: > topics.topic_id]
 }
 
 Table organisations {
@@ -43,24 +38,29 @@ Table organisations {
   hierarchy int
 }
 
-Table module_prerequisites {
-  module_prerequisite_id integer [pk]
-  module_id_uni integer [not null, ref: > modules.module_id]
-  prereq_module_id_uni integer [ref: > modules.module_id]
-  prereq_module_title varchar
-  is_mandatory boolean
-  extraction_method varchar
+Table module_topic_mappings {
+  module_id integer [ref: > modules.module_id]
+  topic_id integer [ref: > topics.topic_id]
 }
 
-Table prerequisite_mapping {
-    module_id_uni varchar [not null]
-    prerequisite_module_id_uni varchar [not null]
-    module_prerequisite_id [int, ref: > module_prerequisites.module_prerequisite_id]
+Table module_prerequisite_mappings {
+  module_prerequisite_mapping_id integer [pk, increment]
+  module_id_uni varchar [not null, ref: > modules.module_id_uni]
+  prereq_module_id_uni varchar [not null, ref: > modules.module_id_uni]
+  extracted_module_identifier_id integer [not null, ref: > extracted_module_identifiers.extracted_module_identifier_id]
+  score float
+  indexes {
+    (module_id_uni, prereq_module_id_uni, extracted_module_identifier_id) [unique]
+  }
 }
 
-Table other_prerequisites {
-  other_prerequisite_id integer [pk]
-  module_id_uni integer [ref: > modules.module_id]
-  detail_type varchar [not null] // 'knowledge_topic' or 'other_information'
-  detail_text varchar [not null]
+Table extracted_module_identifiers {
+  extracted_module_identifier_id integer [pk, increment]
+  module_id_uni varchar [not null, ref: > modules.module_id_uni]
+  identifier varchar [not null]
+  identifier_type varchar [not null]
+  indexes {
+    (module_id_uni, identifier, identifier_type) [unique]
+  }
 }
+
