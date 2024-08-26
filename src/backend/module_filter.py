@@ -2,6 +2,7 @@ from functools import lru_cache
 from sqlalchemy import (
     func,
     distinct,
+    or_,
 )
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql import and_
@@ -21,6 +22,48 @@ from backend.db_models import (
     Topic,
     ModulePrerequisiteMapping,
 )
+
+school_mapper = {
+    "Computation, Information and Technology": "TUS1000",
+    "Engineering and Design": "TUS2000",
+    "Life Sciences": "TUS4000",
+    "Management": "TUS6000",
+    "Medicine and Health": "TUS5000",
+    "Natural Sciences": "TUS3000",
+    "Social Sciences and Technology": "TUS7000",
+}
+
+department_mapper = {
+    "Department Mathematics": "TUS1DP1",
+    "Department Computer Science": "TUS1DP2",
+    "Department Computer Engineering": "TUS1DP3",
+    "Department Electrical Engineering": "TUS1DP4",
+    "Department Aerospace and Geodesy": "TUS2DP1",
+    "Department Architecture": "TUS2DP2",
+    "Department Civil and Environmental Engineering": "TUS2DP3",
+    "Department Energy and Process Engineering": "TUS2DP8",
+    "Department Engineering Physics and Computation": "TUS2DP4",
+    "Department Materials Engineering": "TUS2DP7",
+    "Department Mechanical Engineering": "TUS2DP6",
+    "Department Mobility Systems Engineering": "TUS2DP5",
+    "Department Molecular Life Sciences": "TUS4DP1",
+    "Department Life Science Engineering": "TUS4DP2",
+    "Department Life Science Systems": "TUS4DP3",
+    "Department Economics and Policy": "TUS6DP1",
+    "Department Finance and Accounting": "TUS6DP2",
+    "Department Innovation and Entrepreneurship": "TUS6DP3",
+    "Department Marketing, Strategy and Leadership": "TUS6DP4",
+    "Department Operations and Technology": "TUS6DP5",
+    "Department Health and Sport Sciences": "TUS5DP1",
+    "Department Preclinical Medicine": "TUS5DP2",
+    "Department Clinical Medicine": "TUS5DP3",
+    "Department Physics": "TUS3DP1",
+    "Department Bioscience": "TUS3DP2",
+    "Department Chemistry": "TUS3DP3",
+    "Department Educational Sciences": "TUS7DP1",
+    "Department Governance": "TUS7DP2",
+    "Department Science, Technology and Society": "TUS7DP3",
+}
 
 
 @lru_cache
@@ -47,7 +90,7 @@ def modules_by_id(module_ids):
 
 @lru_cache
 def apply_filters(
-    school_name=None,
+    schools=None,
     study_level=None,
     ects_min=None,
     ects_max=None,
@@ -92,31 +135,28 @@ def apply_filters(
         )
     )
 
-    filters = []
-
+    filters_and = []
+    filters_or = []
     if module_languages:
-        filters.append(Module.lang.in_(module_languages))
+        filters_and.append(Module.lang.in_(module_languages))
 
     if study_level:
-        filters.append(Module.level == study_level)
+        filters_and.append(Module.level == study_level)
 
     if ects_min is not None:
-        filters.append(Module.ects >= ects_min)
+        filters_and.append(Module.ects >= ects_min)
 
     if ects_max is not None:
-        filters.append(Module.ects <= ects_max)
+        filters_and.append(Module.ects <= ects_max)
 
-    if school_name:
-        school_id = (
-            session.query(Organisation.org_id)
-            .filter(Organisation.name == school_name)
-            .scalar()
-        )
-        if school_id:
-            filters.append(Organisation.school_id == school_id)
+    if schools:
+        school_ids = [school_mapper[school] for school in schools]
+        filters_and.append(Organisation.school_id.in_(school_ids))
 
     if departments:
-        filters.append(department.org_id.in_(departments))
+        department_ids = [department_mapper[department] for department in departments]
+        filters_and.append(department.org_id.in_(department_ids))
+
     if previous_modules:
         logging.info(f"{previous_modules=}")
         previous_module_exists = (
@@ -132,7 +172,7 @@ def apply_filters(
             .correlate(Module)
             .exists()
         )
-        filters.append(previous_module_exists)
+        filters_or.append(previous_module_exists)
 
     if topics_of_interest:
         topic_exists = (
@@ -147,14 +187,14 @@ def apply_filters(
             .correlate(Module)
             .exists()
         )
-        filters.append(topic_exists)
+        filters_and.append(topic_exists)
 
     if topics_to_exclude:
-        filters.append(~Topic.topic.in_(topics_to_exclude))
+        filters_and.append(~Topic.topic.in_(topics_to_exclude))
 
     # Apply filters only if they exist
-    if filters:
-        query = query.filter(and_(*filters))
+    if filters_and:
+        query = query.filter(or_(and_(*filters_and), *filters_or))
 
     # Execute the query
     filtered_modules = query.group_by(

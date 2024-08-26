@@ -30,8 +30,7 @@ const ModuleDetail = ({selectedModule, topicsOfInterest}) => {
         }
     };
 
-    return (
-        <Paper elevation={3} sx={{p: 3}}>
+    return (<Box>
             <Typography variant="h5" gutterBottom>
                 {selectedModule.title}
             </Typography>
@@ -48,19 +47,19 @@ const ModuleDetail = ({selectedModule, topicsOfInterest}) => {
                 <strong>Module Prerequisites:</strong>
             </Typography>
             <Box marginLeft={4} marginBlockEnd={3}>
-                    {prereqModuleList.length > 0 ? (
-                        prereqModuleList.map((module, index) => (
-                            <Typography key={index} variant="body2">
-                                <strong>{module.id} </strong>{module.title}
-                            </Typography>
-                        ))
-                    ) : (
-                        selectedModule.prereqModules.map((prereqId, index) => (
-                            <Typography key={index} variant="body2">
-                                {prereqId}
-                            </Typography>
-                        ))
-                    )}
+                {prereqModuleList.length > 0 ? (
+                    prereqModuleList.map((module, index) => (
+                        <Typography key={index} variant="body2">
+                            <strong>{module.id} </strong>{module.title}
+                        </Typography>
+                    ))
+                ) : (
+                    selectedModule.prereqModules.map((prereqId, index) => (
+                        <Typography key={index} variant="body2">
+                            {prereqId}
+                        </Typography>
+                    ))
+                )}
             </Box>
             <Typography variant="body2" gutterBottom>
                 <strong>Study Level:</strong> {selectedModule.studyLevel}
@@ -96,7 +95,7 @@ const ModuleDetail = ({selectedModule, topicsOfInterest}) => {
                     );
                 })}
             </Box>
-        </Paper>
+        </Box>
     );
 };
 

@@ -59,7 +59,7 @@ school_mapping = {
 
 @lru_cache()
 def compute_similarity_score(title_a, title_b):
-    score = fuzzy_similarity(title_a, title_b)
+    score = fuzz.ratio(title_a, title_b)
     suffixes = [("I", "II", "III"), ("1", "2", "3")]
     for suffix_group in suffixes:
         for i in range(len(suffix_group) - 1):

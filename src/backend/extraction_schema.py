@@ -148,8 +148,8 @@ class StudentPreferences(BaseModel):
     study_level: Optional[StudyLevel] = Field(
         description="Degree the student is pursuing. Select one level out of the provided ones"
     )
-    school: Optional[School] = Field(
-        description="School the student is studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair. Assign the student to one of the schools in the examples if he hasn't specified a school. You can use the major to identify the school"
+    schools: Set[School] = Field(
+        description="School the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair. Assign the student to at least one of the schools in the examples if he hasn't specified a school. You can use the major to identify the school"
     )
 
     departments: Set[Department] = Field(
@@ -171,9 +171,13 @@ class StudentPreferences(BaseModel):
     topics_to_exclude: Set[str] = Field(
         default={}, description="Topics that should be excluded"
     )
-    previous_courses: Set[str] = Field(
+    previous_modules: Set[str] = Field(
         default={}, description="Courses the student has previously taken"
     )
+    previous_module_ids: Set[str] = Field(
+        default={}, description="Module ids of courses the student has previously taken"
+    )
+
     module_languages: Set[ModuleLanguage] = Field(
         default={},
         description="Course language preference of the student. That is the language that is used to teach the course.",
@@ -184,13 +188,14 @@ class StudentPreferences(BaseModel):
             "major": self.major if self.major else None,
             "minor": self.minor if self.minor else None,
             "studyLevel": self.study_level.value if self.study_level else None,
-            "school": self.school.value if self.school else None,
+            "schools": [school.value for school in self.schools],
             "departments": [dept.value for dept in self.departments],
             "semester": self.semester,
             "ectsMin": self.ects_min,
             "ectsMax": self.ects_max,
             "topicsOfInterest": list(self.topics_of_interest),
             "topicsToExclude": list(self.topics_to_exclude),
-            "previousCourses": list(self.previous_courses),
+            "previousModules": list(self.previous_modules),
+            "previousModuleIds": list(self.previous_module_ids),
             "languages": [lang.value for lang in self.module_languages],
         }

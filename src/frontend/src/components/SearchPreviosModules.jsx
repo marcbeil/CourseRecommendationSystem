@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {TextField, Box, List, ListItem, ListItemText, Typography} from '@mui/material';
+import {TextField, Box, List, ListItem, ListItemText, Typography, IconButton} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import axios from 'axios';
 
 const SearchPreviousModules = ({previousModules, setPreviousModules}) => {
@@ -35,10 +37,14 @@ const SearchPreviousModules = ({previousModules, setPreviousModules}) => {
         setRecommendations([]); // Clear recommendations after selection
     };
 
+    const handleRemovePreviousModule = (index) => {
+        setPreviousModules(prev => prev.filter((_, i) => i !== index));
+    };
+
     return (
         <Box>
             <TextField
-                label="Search Previous Modules by ID or Name"
+                label="Add Previous Modules by ID or Name"
                 variant="outlined"
                 fullWidth
                 margin="normal"
@@ -57,16 +63,22 @@ const SearchPreviousModules = ({previousModules, setPreviousModules}) => {
                 ))}
             </List>
 
-            <Typography variant="h6" gutterBottom>
-                Selected Previous Modules:
-            </Typography>
+
             <List>
                 {previousModules.map((module, index) => (
-                    <ListItem key={index}>
+                    <ListItem key={index}
+                              secondaryAction={
+                                  <IconButton edge="end" aria-label="delete"
+                                              onClick={() => handleRemovePreviousModule(index)}>
+                                      <CloseIcon/>
+                                  </IconButton>
+                              }
+                    >
                         <ListItemText primary={`${module.id} - ${module.title}`}/>
                     </ListItem>
                 ))}
             </List>
+
         </Box>
     );
 };

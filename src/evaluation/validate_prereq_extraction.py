@@ -63,7 +63,7 @@ def get_test_set(db):
 def get_extracted_data(modules_con, test_set_module_ids):
     placeholders = ",".join("?" for _ in test_set_module_ids)
     extracted_rows = modules_con.execute(
-        f"SELECT module_id_uni, identifier, identifier_type FROM extracted_module_identifiers emi WHERE module_id_uni IN ({placeholders}) and exists(SELECT * FROM module_prerequisite_mappings mpm where emi.extracted_module_identifier_id = mpm.extracted_module_identifier_id and (score is null or score > 95))",
+        f"SELECT module_id_uni, identifier, identifier_type FROM extracted_module_identifiers emi WHERE module_id_uni IN ({placeholders}) and exists(SELECT * FROM module_prerequisite_mappings mpm where emi.extracted_module_identifier_id = mpm.extracted_module_identifier_id and (score is null or score > 80))",
         tuple(test_set_module_ids),
     )
     extracted_data = {}

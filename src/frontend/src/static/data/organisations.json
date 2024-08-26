@@ -1,0 +1,45 @@
+{
+  "Computation, Information and Technology": [
+    "Department Mathematics",
+    "Department Computer Science",
+    "Department Computer Engineering",
+    "Department Electrical Engineering"
+  ],
+  "Engineering and Design": [
+    "Department Aerospace and Geodesy",
+    "Department Architecture",
+    "Department Civil and Environmental Engineering",
+    "Department Energy and Process Engineering",
+    "Department Engineering Physics and Computation",
+    "Department Materials Engineering",
+    "Department Mechanical Engineering",
+    "Department Mobility Systems Engineering"
+  ],
+  "Life Sciences": [
+    "Department Molecular Life Sciences",
+    "Department Life Science Engineering",
+    "Department Life Science Systems"
+  ],
+  "Management": [
+    "Department Economics and Policy",
+    "Department Finance and Accounting",
+    "Department Innovation and Entrepreneurship",
+    "Department Marketing, Strategy and Leadership",
+    "Department Operations and Technology"
+  ],
+  "Medicine and Health": [
+    "Department Health and Sport Sciences",
+    "Department Preclinical Medicine",
+    "Department Clinical Medicine"
+  ],
+  "Natural Sciences": [
+    "Department Physics",
+    "Department Bioscience",
+    "Department Chemistry"
+  ],
+  "Social Sciences and Technology": [
+    "Department Educational Sciences",
+    "Department Governance",
+    "Department Science, Technology and Society"
+  ]
+}
