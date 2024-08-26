@@ -213,7 +213,8 @@ const CourseRecommender = () => {
         handleRefresh(value); // Refresh data with the new page number
     };
 
-    const handleClearFilters = () => {
+    const handleClearFilters = (event) => {
+        event.stopPropagation();
         setSchools([]);
         setDepartments({});
         setStudyLevel('');
@@ -272,7 +273,19 @@ const CourseRecommender = () => {
 
         {showFilters && <Box paddingY={2}> <Accordion expanded={expanded} onChange={handleAccordionChange}>
             <AccordionSummary>
-                {expanded ? 'Hide Filters' : 'Show Filters'}
+                <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
+                    <Typography>
+                        {expanded ? 'Hide Filters' : 'Show Filters'}
+                    </Typography>
+                    {expanded ?
+                        <Button
+                            variant="outlined"
+                            sx={{ml: 2}}
+                            onClick={handleClearFilters}
+                        >
+                            Clear All Filters
+                        </Button> : null}
+                </Box>
             </AccordionSummary>
             <AccordionDetails>
                 <Box margin="normal">
@@ -340,26 +353,28 @@ const CourseRecommender = () => {
                             </MenuItem>))}
                         </Select>
                     </FormControl>
-                    <Box display="flex" sx={{mb: 4}}>
+                    <Box display="flex" margin="normal" sx={{mb: 4, mr: 2}}>
                         {/* Language Preference on the Left */}
-                        <FormControl component="fieldset" fullWidth margin="normal" sx={{mb: 2, flex: 1}}>
-                            <Typography component="legend">Language Preference</Typography>
-                            <FormGroup>
-                                {languagesData.map((lang) => (
-                                    <FormControlLabel
-                                        key={lang}
-                                        control={
-                                            <Checkbox
-                                                checked={languages.includes(lang)}
-                                                onChange={handleLanguageChange}
-                                                value={lang}
-                                            />
-                                        }
-                                        label={lang}
-                                    />
-                                ))}
-                            </FormGroup>
-                        </FormControl>
+                        <Box width="25%">
+                            <FormControl component="fieldset" fullWidth margin="normal" sx={{mb: 2, flex: 1}}>
+                                <Typography component="legend">Language Preference</Typography>
+                                <FormGroup>
+                                    {languagesData.map((lang) => (
+                                        <FormControlLabel
+                                            key={lang}
+                                            control={
+                                                <Checkbox
+                                                    checked={languages.includes(lang)}
+                                                    onChange={handleLanguageChange}
+                                                    value={lang}
+                                                />
+                                            }
+                                            label={lang}
+                                        />
+                                    ))}
+                                </FormGroup>
+                            </FormControl>
+                        </Box>
 
                         {/* Sliders on the Right in Two Rows */}
                         <Box sx={{flex: 1, ml: 2}}>
@@ -411,15 +426,6 @@ const CourseRecommender = () => {
                             setPreviousModules={setPreviousModules}
                         />
                     </Box>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        fullWidth
-                        sx={{mt: 2, mb: 2}}
-                        onClick={handleClearFilters}
-                    >
-                        Clear All Filters
-                    </Button>
                     <Button
                         variant="contained"
                         color="primary"

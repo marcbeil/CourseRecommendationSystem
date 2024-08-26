@@ -4,13 +4,6 @@ from typing import Optional, Set, Dict
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 
-# class Major(Enum):
-#     COMPUTER_SCIENCE = "Computer Science"
-#     MATHEMATICS = "Mathematics"
-#     INFORMATION_SYSTEMS = "Information Systems"
-#     MEDICINE = "Medicine"
-#     ECONOMICS = "Economics"
-#
 class StudyLevel(Enum):
     BACHELOR = "Bachelor"
     MASTER = "Master"
@@ -73,20 +66,6 @@ class ModuleLanguage(Enum):
 
 class StudentPreferences(BaseModel):
     """Student Message about his current state of studies"""
-
-    #
-    # major: Optional[str] = Field(
-    #     description="Major subject of the student",
-    #     examples=[
-    #         "Computer Science",
-    #         "Mechanical Enginieering",
-    #         "Mathematics",
-    #         "Information Systems",
-    #         "Medicine",
-    #         "Economics",
-    #     ],
-    # )
-    # minor: Optional[str] = Field(description="Minor subject of the student")
     study_level: Optional[StudyLevel] = Field(
         description="Degree the student is pursuing. Select one level out of the provided ones"
     )
@@ -128,8 +107,6 @@ class StudentPreferences(BaseModel):
 
     def to_json(self) -> Dict:
         return {
-            "major": self.major if self.major else None,
-            "minor": self.minor if self.minor else None,
             "studyLevel": self.study_level.value if self.study_level else None,
             "schools": [school.value for school in self.schools],
             "departments": [dept.value for dept in self.departments],
