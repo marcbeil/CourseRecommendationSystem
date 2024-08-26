@@ -231,10 +231,11 @@ const CourseRecommender = () => {
     return <Container maxWidth="lg" sx={{mt: 4}}>
         <Box display="flex" justifyContent="left" mb={4}>
             <img src={logo} alt="TUM Logo" style={{width: '150px', height: 'auto'}}/>
+            <Typography variant="h1" marginX={2} color={"#3070b3"}>
+                Course Recommender
+            </Typography>
         </Box>
-        <Typography variant="h4" gutterBottom>
-            Friendly Course Recommender
-        </Typography>
+
         <Box display="flex" justifyContent="center" alignItems="center" margin="normal" border={1}
              borderColor="grey.300" borderRadius={2} p={2}>
             <Box

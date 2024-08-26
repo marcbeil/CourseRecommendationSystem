@@ -8,7 +8,6 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<CourseRecommender/>}/>
-                <Route path="/recommend" element={<NaturalLanguage/>}/>
             </Routes>
         </BrowserRouter>
     );
