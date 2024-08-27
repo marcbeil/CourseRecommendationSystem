@@ -102,25 +102,28 @@ def modules_by_id(module_ids):
     return modules_dict
 
 
+from sqlalchemy import func, case
+
+
 @lru_cache
 def apply_filters(
-    schools=None,
-    study_level=None,
-    ects_min=None,
-    ects_max=None,
-    digital_score_min=None,
-    digital_score_max=None,
-    module_languages=None,
-    departments=None,
-    previous_modules=None,
-    topics_of_interest=None,
-    topics_to_exclude=None,
+    schools,
+    study_level,
+    ects_min,
+    ects_max,
+    digital_score_min,
+    digital_score_max,
+    module_languages,
+    departments,
+    previous_modules,
+    topics_of_interest,
+    topics_to_exclude,
 ):
     session = Session()
     department = aliased(Organisation)
     school = aliased(Organisation)
 
-    # Base query
+    # Base query with added custom ordering fields
     query = (
         session.query(
             Module.module_id_uni,
@@ -153,6 +156,7 @@ def apply_filters(
 
     filters_and = []
     filters_or = []
+
     if module_languages:
         languages_mapped = set(
             itertools.chain.from_iterable(
@@ -165,16 +169,16 @@ def apply_filters(
         study_levels = study_level_mapper[study_level]
         filters_and.append(Module.level.in_(study_levels))
 
-    if ects_min:
+    if ects_min is not None:
         filters_and.append(Module.ects >= ects_min)
 
-    if ects_max:
+    if ects_max is not None:
         filters_and.append(Module.ects <= ects_max)
 
-    if digital_score_min:
+    if digital_score_min is not None:
         filters_and.append(Module.digital_score >= digital_score_min)
 
-    if digital_score_max:
+    if digital_score_max is not None:
         filters_and.append(Module.digital_score <= digital_score_max)
 
     if schools:
@@ -201,9 +205,8 @@ def apply_filters(
             .exists()
         )
         filters_or.append(previous_module_exists)
-
     if topics_of_interest:
-        topic_exists = (
+        filters_and.append(
             session.query(Topic.topic_id)
             .filter(
                 and_(
@@ -215,14 +218,23 @@ def apply_filters(
             .correlate(Module)
             .exists()
         )
-        filters_and.append(topic_exists)
 
     if topics_to_exclude:
         filters_and.append(~Topic.topic.in_(topics_to_exclude))
+
     # Apply filters only if they exist
     if filters_and:
         query = query.filter(or_(and_(*filters_and), *filters_or))
 
+    # Order by the number of matching topics of interest and whether it has previous modules as prerequisites
+    query = query.order_by(
+        func.sum(
+            case((Topic.topic.in_(topics_of_interest), 1), else_=0)
+        ).desc(),  # Modules with more matching topics of interest first
+        func.sum(
+            ModulePrerequisiteMapping.prereq_module_id_uni.in_(previous_modules)
+        ).desc(),  # Modules with previous modules as prerequisites on top
+    )
     # Execute the query
     filtered_modules = query.group_by(
         Module.module_id, Organisation.name, department.name, school.name

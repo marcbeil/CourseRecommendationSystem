@@ -47,10 +47,10 @@ def get_modules():
     study_level = request.args.get("studyLevel", "")
     ects_range = request.args.getlist("ectsRange[]", type=int)
     ects_min = ects_range[0] if len(ects_range) > 0 else 0
-    ects_max = ects_range[1] if len(ects_range) > 1 else 4
+    ects_max = ects_range[1] if len(ects_range) > 1 else 30
     digital_score_range = request.args.getlist("digitalScoreRange[]", type=int)
     digital_score_min = digital_score_range[0] if len(digital_score_range) > 0 else 0
-    digital_score_max = digital_score_range[1] if len(digital_score_range) > 1 else 4
+    digital_score_max = digital_score_range[1] if len(digital_score_range) > 1 else 3
     languages = request.args.getlist("languages[]")
     departments = request.args.getlist("departments[]")
     topics_of_interest = request.args.getlist("topicsOfInterest[]")
@@ -60,12 +60,12 @@ def get_modules():
     student_text = request.args.get("studentText", "")
     page = request.args.get("page", type=int, default=1)
     size = request.args.get("size", type=int, default=10)
-    languages = tuple(languages) if languages else None
-    departments = tuple(departments) if departments else None
-    previous_modules = tuple(previous_modules) if previous_modules else None
-    topics_of_interest = tuple(topics_of_interest) if topics_of_interest else None
-    topics_to_exclude = tuple(topics_to_exclude) if topics_to_exclude else None
-    schools = tuple(schools) if schools else None
+    languages = tuple(languages) if languages else tuple()
+    departments = tuple(departments) if departments else tuple()
+    previous_modules = tuple(previous_modules) if previous_modules else tuple()
+    topics_of_interest = tuple(topics_of_interest) if topics_of_interest else tuple()
+    topics_to_exclude = tuple(topics_to_exclude) if topics_to_exclude else tuple()
+    schools = tuple(schools) if schools else tuple()
     # Call apply_filters with individual arguments
     filtered_modules = apply_filters(
         schools=schools,
@@ -191,6 +191,9 @@ def post_process_prefs(prefs: Dict):
             previous_modules_matched.append(best_match)
 
     prefs["previousModules"] = previous_modules_matched
+
+    if not prefs["languages"]:
+        prefs["languages"] = ["English", "German", "Other"]
     return prefs
 
 

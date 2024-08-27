@@ -66,6 +66,7 @@ class ModuleLanguage(Enum):
 
 class StudentPreferences(BaseModel):
     """Student Message about his current state of studies"""
+
     study_level: Optional[StudyLevel] = Field(
         description="Degree the student is pursuing. Select one level out of the provided ones"
     )

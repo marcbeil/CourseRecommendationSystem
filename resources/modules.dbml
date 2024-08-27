@@ -16,6 +16,8 @@ Table modules {
   name_embedding blob
   indexes {
     (module_id_uni) [unique]
+    (org_id)
+    (level, lang, ects, digital_score)
   }
 }
 
@@ -23,6 +25,9 @@ Table topics {
   topic_id integer [pk]
   topic varchar [not null]
   embedding blob
+  indexes {
+    (topic)
+  }
 }
 
 Table organisations {
@@ -36,11 +41,18 @@ Table organisations {
   homepage varchar
   org_id_tumonline int
   hierarchy int
+  indexes {
+    (dep_id)
+    (school_id)
+  }
 }
 
 Table module_topic_mappings {
   module_id integer [ref: > modules.module_id]
   topic_id integer [ref: > topics.topic_id]
+  indexes {
+    (module_id, topic_id)
+  }
 }
 
 Table module_prerequisite_mappings {
@@ -51,6 +63,7 @@ Table module_prerequisite_mappings {
   score float
   indexes {
     (module_id_uni, prereq_module_id_uni, extracted_module_identifier_id) [unique]
+    (module_id_uni, prereq_module_id_uni)
   }
 }
 
@@ -63,4 +76,3 @@ Table extracted_module_identifiers {
     (module_id_uni, identifier, identifier_type) [unique]
   }
 }
-

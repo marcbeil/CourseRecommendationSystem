@@ -40,7 +40,7 @@ const CourseRecommender = () => {
     const [departments, setDepartments] = useState({});  // Updated to hold departments for each school
     const [studyLevel, setStudyLevel] = useState('');
     const [ectsRange, setEctsRange] = useState([1, 30]);
-    const [digitalScoreRange, setDigitalScoreRange] = useState([0, 4])
+    const [digitalScoreRange, setDigitalScoreRange] = useState([0, 3])
     const [languages, setLanguages] = useState(languagesData);
     const [topicsOfInterest, setTopicsOfInterest] = useState({});
     const [excludedTopics, setExcludedTopics] = useState({});
@@ -274,12 +274,11 @@ const CourseRecommender = () => {
         {showFilters && <Box paddingY={2}> <Accordion expanded={expanded} onChange={handleAccordionChange}>
             <AccordionSummary>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
-                    <Typography>
+                    <Button>
                         {expanded ? 'Hide Filters' : 'Show Filters'}
-                    </Typography>
+                    </Button>
                     {expanded ?
                         <Button
-                            variant="outlined"
                             sx={{ml: 2}}
                             onClick={handleClearFilters}
                         >
@@ -390,14 +389,14 @@ const CourseRecommender = () => {
                                 />
                             </Box>
                             <Box my={2} sx={{mb: 4}}>
-                                <Typography component="legend">Digital Score Range (0-4)</Typography>
+                                <Typography component="legend">Digital Score Range (0-3)</Typography>
                                 <Slider
                                     value={digitalScoreRange}
                                     onChange={handleDigitalScoreRange}
                                     valueLabelDisplay="auto"
                                     disableSwap={true}
                                     min={1}
-                                    max={4}
+                                    max={3}
                                 />
                             </Box>
                         </Box>
