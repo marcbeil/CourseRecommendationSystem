@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -55,40 +55,48 @@ const CourseRecommender = () => {
     const [expanded, setExpanded] = useState(false);
 
 
+// Add this useEffect after your state declarations
+    useEffect(() => {
+        if (showFilters) {  // Ensure filters are visible
+            handleRefresh();
+        }
+    }, [schools, departments, studyLevel, ectsRange, digitalScoreRange, languages, topicsOfInterest, excludedTopics, previousModules, studentText, showFilters]);  // Add all relevant states here
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             if (!studentText) {
-                setShowFilters(true)
-                handleRefresh()
+                setShowFilters(true);
             } else {
-                setLoading(true);  // Start loading
+                setLoading(true); // Start loading
                 const response = await axios.post('http://localhost:8080/start-extraction', {
                     text: studentText
                 });
 
                 if (response.data.success) {
-                    const filters = response.data.filters || {};  // Ensure filters is at least an empty object
+                    const filters = response.data.filters || {}; // Ensure filters is at least an empty object
 
                     // Set all states with corresponding values or default values
                     setStudyLevel(filters.studyLevel || '');
                     setSchools(filters.schools || []);
                     setDepartments(filters.departments || []);
-                    setEctsRange([filters.ectsMin || 1, filters.ectsMax || 30])
+                    setEctsRange([filters.ectsMin || 1, filters.ectsMax || 30]);
                     setTopicsOfInterest(filters.topicsOfInterest || {});
                     setExcludedTopics(filters.topicsToExclude || {});
                     setPreviousModules(filters.previousModules || []);
                     setLanguages(filters.languages || []);
                     setShowFilters(true);
-                    handleRefresh()
                 } else {
                     console.error('Extraction failed:', response.data.message);
                 }
             }
         } catch (error) {
             console.error('Error during extraction:', error);
+        } finally {
+            setLoading(false); // End loading
         }
     };
+
 
     const handleSchoolChange = (event) => {
         const {
