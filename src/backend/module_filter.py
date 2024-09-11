@@ -190,7 +190,6 @@ def apply_filters(
         filters_and.append(department.org_id.in_(department_ids))
 
     if previous_modules:
-        logging.info(f"{previous_modules=}")
         previous_module_exists = (
             session.query(ModulePrerequisiteMapping)
             .filter(

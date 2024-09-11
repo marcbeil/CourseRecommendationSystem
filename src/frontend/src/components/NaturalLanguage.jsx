@@ -40,7 +40,6 @@ const StudyPreferencesForm = () => {
             });
 
             if (response.data.success) {
-                console.log(response.data.filters.topicsOfInterest)
                 setSuggestedFilters(response.data.filters);
             } else {
                 console.error('Extraction failed:', response.data.message);

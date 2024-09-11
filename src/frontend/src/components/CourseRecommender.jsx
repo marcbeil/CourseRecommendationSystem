@@ -18,8 +18,12 @@ import {
     MenuItem,
     Pagination,
     Select,
-    Slider, styled,
-    TextField, Tooltip,
+    Slider,
+    styled,
+    Tab,
+    Tabs,
+    TextField,
+    Tooltip,
     Typography
 } from '@mui/material';
 import {Chip, Paper, IconButton} from '@mui/material';
@@ -46,13 +50,15 @@ const CourseRecommender = () => {
     const [excludedTopics, setExcludedTopics] = useState({});
     const [previousModules, setPreviousModules] = useState([]);
     const [modules, setModules] = useState([]);
+    const [modulesRankedByLLM, setModulesRankedByLLM] = useState([])
+    const [selectedTab, setSelectedTab] = useState(0); // 0 for "Modules" tab, 1 for "LLM Modules" tab
     const [selectedModule, setSelectedModule] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(15);
     const [showFilters, setShowFilters] = useState(false)
     const [loading, setLoading] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const [filtersExpanded, setFiltersExpanded] = useState(false);
 
 
 // Add this useEffect after your state declarations
@@ -60,7 +66,7 @@ const CourseRecommender = () => {
         if (showFilters) {  // Ensure filters are visible
             handleRefresh();
         }
-    }, [schools, departments, studyLevel, ectsRange, digitalScoreRange, languages, topicsOfInterest, excludedTopics, previousModules, studentText, showFilters]);  // Add all relevant states here
+    }, [showFilters]);  // Add all relevant states here
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -69,6 +75,10 @@ const CourseRecommender = () => {
                 setShowFilters(true);
             } else {
                 setLoading(true); // Start loading
+                setSelectedModule(null);
+                setModules([]);
+                setModulesRankedByLLM([])
+                setFiltersExpanded(false)
                 const response = await axios.post('http://localhost:8080/start-extraction', {
                     text: studentText
                 });
@@ -121,19 +131,16 @@ const CourseRecommender = () => {
             const isDepartmentSelected = prevDepartments[school]?.includes(department);
 
             // Toggle the department selection
-            const updatedDepartments = isDepartmentSelected
-                ? prevDepartments[school].filter((dep) => dep !== department)
-                : [...(prevDepartments[school] || []), department];
+            const updatedDepartments = isDepartmentSelected ? prevDepartments[school].filter((dep) => dep !== department) : [...(prevDepartments[school] || []), department];
 
             return {
-                ...prevDepartments,
-                [school]: updatedDepartments,
+                ...prevDepartments, [school]: updatedDepartments,
             };
         });
     };
 
     const handleAccordionChange = () => {
-        setExpanded(!expanded);
+        setFiltersExpanded(!filtersExpanded);
     };
 
     const handleStudyLevelChange = (event) => {
@@ -149,6 +156,14 @@ const CourseRecommender = () => {
     const handleLanguageChange = (event) => {
         const {value} = event.target;
         setLanguages((prev) => prev.includes(value) ? prev.filter((id) => id !== value) : [...prev, value]);
+    };
+    const handleTabChange = (event, newValue) => {
+        setSelectedTab(newValue);
+        if (newValue === 0) {
+            setSelectedModule(modules[0])
+        } else {
+            setSelectedModule(modulesRankedByLLM[0])
+        }
     };
 
     const fetchTopicMappings = async (topic) => {
@@ -169,6 +184,7 @@ const CourseRecommender = () => {
         setLoading(true);  // Start loading
         setSelectedModule(null);
         setModules([]);
+        setModulesRankedByLLM([])
 
         const filters = {
             schools,
@@ -187,6 +203,7 @@ const CourseRecommender = () => {
             setModules(response.modules);
             setSelectedModule(response.modules[0] || null);
             setTotalPages(response.totalPages);
+            setModulesRankedByLLM(response.modulesRankedByLLM)
         }
         setLoading(false);  // End loading
     };
@@ -194,7 +211,6 @@ const CourseRecommender = () => {
 
     const fetchModules = async (filters, page) => {  // Accept page as an argument
         try {
-            console.log(filters)
             // Flatten the topicsOfInterest mappings into a single array
             const flattenedTopicsOfInterest = Object.values(filters.topicsOfInterest).flat();
             const flattenedExcludedTopics = Object.values(filters.excludedTopics).flat();
@@ -238,6 +254,22 @@ const CourseRecommender = () => {
     const handleModuleClick = (module) => {
         setSelectedModule(module);
     };
+    const renderModuleList = (modulesToRender) => {
+        return modulesToRender.map((module) => (<ListItem
+            button
+            key={module.id}
+            onClick={() => handleModuleClick(module)}
+            selected={selectedModule?.id === module.id} // Highlight if this is the selected module
+            sx={{
+                backgroundColor: selectedModule?.id === module.id ? 'rgba(0, 123, 255, 0.1)' : 'inherit', // Light blue background for selected item
+                '&:hover': {
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)', // Slightly darker blue on hover
+                },
+            }}
+        >
+            <ListItemText primary={`${module.id} - ${module.title}`}/>
+        </ListItem>));
+    };
 
     return <Container maxWidth="lg" sx={{mt: 4}}>
         <Box display="flex" justifyContent="left" mb={4}>
@@ -279,19 +311,18 @@ const CourseRecommender = () => {
             </Box>
         </Box>
 
-        {showFilters && <Box paddingY={2}> <Accordion expanded={expanded} onChange={handleAccordionChange}>
+        {showFilters && <Box paddingY={2}> <Accordion expanded={filtersExpanded} onChange={handleAccordionChange}>
             <AccordionSummary>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
                     <Button>
-                        {expanded ? 'Hide Filters' : 'Show Filters'}
+                        {filtersExpanded ? 'Hide Filters' : 'Show Filters'}
                     </Button>
-                    {expanded ?
-                        <Button
-                            sx={{ml: 2}}
-                            onClick={handleClearFilters}
-                        >
-                            Clear All Filters
-                        </Button> : null}
+                    {filtersExpanded ? <Button
+                        sx={{ml: 2}}
+                        onClick={handleClearFilters}
+                    >
+                        Clear All Filters
+                    </Button> : null}
                 </Box>
             </AccordionSummary>
             <AccordionDetails>
@@ -325,26 +356,21 @@ const CourseRecommender = () => {
                                 sx={{
                                     '&::-webkit-scrollbar': {
                                         height: '8px',
-                                    },
-                                    '&::-webkit-scrollbar-thumb': {
-                                        backgroundColor: '#888',
-                                        borderRadius: '4px',
-                                    },
-                                    '&::-webkit-scrollbar-thumb:hover': {
+                                    }, '&::-webkit-scrollbar-thumb': {
+                                        backgroundColor: '#888', borderRadius: '4px',
+                                    }, '&::-webkit-scrollbar-thumb:hover': {
                                         backgroundColor: '#555',
                                     },
                                 }}
                             >
-                                {organisationsData[school] && organisationsData[school].map((department) => (
-                                    <Chip
-                                        key={department}
-                                        label={department.replace(/^Department\s*/, '')}
-                                        onClick={() => handleDepartmentChange(school, department)}
-                                        color={departments[school]?.includes(department) ? 'primary' : 'default'}
-                                        variant={departments[school]?.includes(department) ? 'filled' : 'outlined'}
-                                        sx={{cursor: 'pointer', whiteSpace: 'nowrap'}}
-                                    />
-                                ))}
+                                {organisationsData[school] && organisationsData[school].map((department) => (<Chip
+                                    key={department}
+                                    label={department.replace(/^Department\s*/, '')}
+                                    onClick={() => handleDepartmentChange(school, department)}
+                                    color={departments[school]?.includes(department) ? 'primary' : 'default'}
+                                    variant={departments[school]?.includes(department) ? 'filled' : 'outlined'}
+                                    sx={{cursor: 'pointer', whiteSpace: 'nowrap'}}
+                                />))}
                             </Box>
                         </Paper>
 
@@ -366,19 +392,15 @@ const CourseRecommender = () => {
                             <FormControl component="fieldset" fullWidth margin="normal" sx={{mb: 2, flex: 1}}>
                                 <Typography component="legend">Language Preference</Typography>
                                 <FormGroup>
-                                    {languagesData.map((lang) => (
-                                        <FormControlLabel
-                                            key={lang}
-                                            control={
-                                                <Checkbox
-                                                    checked={languages.includes(lang)}
-                                                    onChange={handleLanguageChange}
-                                                    value={lang}
-                                                />
-                                            }
-                                            label={lang}
-                                        />
-                                    ))}
+                                    {languagesData.map((lang) => (<FormControlLabel
+                                        key={lang}
+                                        control={<Checkbox
+                                            checked={languages.includes(lang)}
+                                            onChange={handleLanguageChange}
+                                            value={lang}
+                                        />}
+                                        label={lang}
+                                    />))}
                                 </FormGroup>
                             </FormControl>
                         </Box>
@@ -448,7 +470,10 @@ const CourseRecommender = () => {
         {loading && <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress/>
         </Box>}
-
+        {showFilters && <Tabs value={selectedTab} onChange={handleTabChange} centered>
+            <Tab label="Modules"/>
+            {modulesRankedByLLM && <Tab label="LLM Modules"/>}
+        </Tabs>}
         {showFilters && (<Box display="flex" flexDirection="column" height="100%">
                 <Box
                     display="flex"
@@ -466,20 +491,8 @@ const CourseRecommender = () => {
                         sx={{borderRight: '1px solid lightgray'}}
                     >
                         <List>
-                            {modules.map((module) => (<ListItem
-                                button
-                                key={module.id}
-                                onClick={() => handleModuleClick(module)}
-                                selected={selectedModule?.id === module.id} // Highlight if this is the selected module
-                                sx={{
-                                    backgroundColor: selectedModule?.id === module.id ? 'rgba(0, 123, 255, 0.1)' : 'inherit', // Light blue background for selected item
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(0, 123, 255, 0.2)', // Slightly darker blue on hover
-                                    },
-                                }}
-                            >
-                                <ListItemText primary={`${module.id} - ${module.title}`}/>
-                            </ListItem>))}
+                            {/* Use the renderModuleList function with the appropriate list based on the selectedTab */}
+                            {selectedTab === 0 ? renderModuleList(modules) : renderModuleList(modulesRankedByLLM)}
                         </List>
                     </Box>
                     <Box
@@ -501,7 +514,6 @@ const CourseRecommender = () => {
                     />
                 </Box>
             </Box>
-
         )}
     </Container>;
 };

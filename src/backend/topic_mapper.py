@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 import faiss  # make faiss available
 import json
 import numpy as np
@@ -37,6 +39,7 @@ class VectorStore:
         _index.add(embeddings_np)
         return _index
 
+    @lru_cache
     def vector_similarity_search(self, topic_str, k, threshold=None):
         client = OpenAI()
         topic_embedding = (

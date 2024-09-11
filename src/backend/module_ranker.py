@@ -1,7 +1,8 @@
-from functools import lru_cache
+import logging
+from functools import lru_cache, cache
 
 from pydantic import BaseModel, Field
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 
 # Initialize the OpenAI client
 client = OpenAI()
@@ -23,23 +24,25 @@ class ModuleRankings(BaseModel):
     )
 
 
-
 # Function to rank modules based on student input
-@lru_cache
-def rank_modules(student_input, modules: str):
-    completion = client.beta.chat.completions.parse(
-        temperature=0,
-        model="gpt-4o-2024-08-06",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a helpful tutor at the help office of TUM university. You will be provided with a list of modules containing fields such as module id, description, language, etc. Also, you will be provided with a message from a student. Please rank the modules according to the student's message. Provide a reason for each module.",
-            },
-            {"role": "user", "content": f"Student input: {student_input}"},
-            {"role": "user", "content": f"Modules:\n{modules}"},
-        ],
-        response_format=ModuleRankings,
-    )
-
-    ranked_modules = completion.choices[0].message.parsed.ranked_modules
+@cache
+def rank_modules(student_input, modules: tuple):
+    logging.info("rank_modules")
+    try:
+        completion = client.beta.chat.completions.parse(
+            temperature=0,
+            model="gpt-4o-2024-08-06",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful tutor at the help office of TUM university. You will be provided with a list of modules containing fields such as module id, description, language, etc. Also, you will be provided with a message from a student. Please rank the modules according to the student's message. Provide a reason for each module.",
+                },
+                {"role": "user", "content": f"Student input: {student_input}"},
+                {"role": "user", "content": f"Modules:\n{modules}"},
+            ],
+            response_format=ModuleRankings,
+        )
+        ranked_modules = completion.choices[0].message.parsed.ranked_modules
+    except RateLimitError:
+        ranked_modules = []
     return ranked_modules

@@ -71,7 +71,7 @@ class StudentPreferences(BaseModel):
         description="Degree the student is pursuing. Select one level out of the provided ones"
     )
     schools: Set[School] = Field(
-        description="School the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair. Assign the student to at least one of the schools in the examples if he hasn't specified a school. You can use the major to identify the school",
+        description="School the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair.",
         default={},
     )
 
@@ -103,7 +103,7 @@ class StudentPreferences(BaseModel):
 
     module_languages: Set[ModuleLanguage] = Field(
         default={},
-        description="Course language preference of the student. That is the language that is used to teach the course. DO NOT infer the language from the provided student input",
+        description="Course language preference of the student. That is the language that is used to teach the course. DO NOT infer the language from the written language of the student's input",
     )
 
     def to_json(self) -> Dict:
