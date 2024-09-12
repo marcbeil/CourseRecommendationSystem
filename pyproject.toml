@@ -26,6 +26,7 @@ scikit-learn = "^1.5.1"
 python-levenshtein = "^0.25.1"
 roman = "^4.2"
 flask-cors = "^4.0.1"
+matplotlib = "^3.9.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"

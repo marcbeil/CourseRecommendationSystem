@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from sqlalchemy import func
 from backend.db_models import Session, Topic
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
 load_dotenv()
 
@@ -52,15 +54,15 @@ class VectorStore:
         )  # Reshape to a 2D array (1, dimension)
         distances, indices = self.index.search(embedding_np, k)
 
-        if threshold is not None:
+        if threshold:
             # Filter out results based on the threshold
-            indices = indices[0][distances[0] <= threshold]
-            distances = distances[0][distances[0] <= threshold]
+            mask = distances[0] <= threshold
+            indices = indices[0][mask]
+            distances = distances[0][mask]
         else:
             indices = indices[0]
             distances = distances[0]
 
-        print(distances)
         return [self.topics[index] for index in indices]
 
     def map_topic(self, topic, k, threshold=None):
@@ -71,3 +73,33 @@ class VectorStore:
         for topic in topics:
             topic_mappings[topic] = self.map_topic(topic, k, threshold=threshold)
         return topic_mappings
+
+    def save_2d_projection(self, filename="projection.png", transparent=True):
+        # Convert embeddings to numpy array if not already done
+        embeddings = np.array(
+            [np.array(json.loads(topic.embedding)) for topic in self.topics]
+        )
+
+        # Use PCA to reduce dimensions to 2
+        pca = PCA(n_components=2)
+        embeddings_2d = pca.fit_transform(embeddings)
+
+        # Plotting the 2D projection
+        plt.figure(figsize=(10, 8))
+        plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], s=50, alpha=0.7)
+
+        # Add topic names next to their corresponding points in the 2D plot
+        for i, topic in enumerate(self.topics):
+            plt.text(embeddings_2d[i, 0], embeddings_2d[i, 1], topic.topic, fontsize=9)
+
+        # Customize the plot to keep axes but remove labels and ticks
+        plt.xticks([])  # Remove x-axis ticks
+        plt.yticks([])  # Remove y-axis ticks
+        plt.gca().set_xticklabels([])  # Remove x-axis labels
+        plt.gca().set_yticklabels([])  # Remove y-axis labels
+
+        # Save the plot as an image
+        plt.savefig(filename, bbox_inches="tight", transparent=transparent)
+
+        # Close the plot to free up memory
+        plt.close()

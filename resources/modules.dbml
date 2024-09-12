@@ -13,7 +13,6 @@ Table modules {
   link varchar
   link_type varchar
   digital_score int
-  name_embedding blob
   indexes {
     (module_id_uni) [unique]
     (org_id)

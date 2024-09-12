@@ -155,7 +155,7 @@ def get_modules_by_id():
     )
 
 
-def get_topic_mappings(topic, k=1, threshold=0.1):
+def get_topic_mappings(topic, k, threshold=0.1):
     topic_mappings = vectorstore.map_topic(topic, k=k, threshold=threshold)
     topic_mappings = [mapping.topic for mapping in topic_mappings]
     return topic_mappings
@@ -167,10 +167,11 @@ def map_topic():
     if not topic:
         return jsonify({"message": "Topic is required"}), 400
 
-    threshold = request.args.get("threshold", default=0.5, type=float)
-    max_mappings = request.args.get("maxMappings", default=3, type=int)
-
+    threshold = request.args.get("threshold", default=0.2, type=float)
+    max_mappings = request.args.get("maxMappings", default=30, type=int)
+    logging.info(threshold)
     topic_mappings = get_topic_mappings(topic, k=max_mappings, threshold=threshold)
+    logging.info(f"{len(topic_mappings)}")
     return jsonify({"topicMappings": topic_mappings}), 200
 
 
