@@ -35,7 +35,7 @@ def rank_modules(student_input, modules: tuple):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful tutor at the help office of TUM university. You will be provided with a list of modules containing fields such as module id, description, language, etc. Also, you will be provided with a message from a student. Please rank the modules according to the student's message. Provide a reason for each module.",
+                    "content": "You are a helpful tutor at the help office of TUM university. You will be provided with a list of modules containing fields such as module id, description, language, etc. Also, you will be provided with a message from a student. Please rank the modules according to the student's message. Provide a reason for each module. For the reason please be brief (max 2 sentences). You do not need to repeat the title of the module.",
                 },
                 {"role": "user", "content": f"Student input: {student_input}"},
                 {"role": "user", "content": f"Modules:\n{modules}"},

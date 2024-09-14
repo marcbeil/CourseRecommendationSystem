@@ -53,9 +53,50 @@ def store_user_input(input):
 
 @app.get("/modules")
 def get_modules():
-    # Extract and process query parameters
+    """Fetch unranked modules based on filter parameters."""
+    # Extract query parameters
     query_params = extract_query_params()
 
+    # Fetch unranked modules
+    paginated_modules, total_pages, total_modules = fetch_unranked_modules(query_params)
+
+    return jsonify(
+        {
+            "modules": paginated_modules,
+            "modulesRankedByLLM": None,  # Not used in this route
+            "totalPages": total_pages,
+            "currentPage": query_params["page"],
+            "pageSize": query_params["size"],
+            "totalModules": total_modules,
+        }
+    )
+
+
+@app.get("/modules-ranked")
+def get_modules_ranked():
+    """Fetch ranked modules based on filter parameters and student text."""
+    # Extract query parameters
+    query_params = extract_query_params()
+
+    # Fetch ranked modules
+    paginated_modules, modules_ranked_by_llm, total_pages, total_modules = (
+        fetch_ranked_modules(query_params)
+    )
+
+    return jsonify(
+        {
+            "modules": paginated_modules,
+            "modulesRankedByLLM": modules_ranked_by_llm,
+            "totalPages": total_pages,
+            "currentPage": query_params["page"],
+            "pageSize": query_params["size"],
+            "totalModules": total_modules,
+        }
+    )
+
+
+def fetch_unranked_modules(query_params):
+    """Fetch and paginate unranked modules based on filter parameters."""
     # Separate filter parameters from others
     filter_params = {
         key: query_params[key]
@@ -74,19 +115,29 @@ def get_modules():
         ]
     }
 
-    # Call apply_filters with only the filter parameters
+    # Apply filters to fetch modules
     filtered_modules = apply_filters(**filter_params)
 
-    # Implement pagination
+    # Paginate the filtered modules
     paginated_modules, total_pages, total_modules = paginate(
         filtered_modules, query_params["page"], query_params["size"]
     )
 
+    return paginated_modules, total_pages, total_modules
+
+
+def fetch_ranked_modules(query_params):
+    """Fetch, rank, and paginate modules based on filter parameters and student text."""
+    # Fetch unranked modules first
+    paginated_modules, total_pages, total_modules = fetch_unranked_modules(query_params)
+
     # If student text is provided, rank the modules using LLM
     modules_ranked_by_llm = None
-    if filtered_modules and query_params["student_text"]:
+    if paginated_modules and query_params["student_text"]:
         store_user_input(query_params["student_text"])
-        modules_to_rank = filtered_modules[:40].copy()  # Limit to top 100 for ranking
+
+        # Limit to a subset of modules for ranking to optimize performance
+        modules_to_rank = paginated_modules[:40].copy()
         module_ranks = rank_modules(
             student_input=query_params["student_text"],
             modules=tuple(
@@ -101,16 +152,7 @@ def get_modules():
             add_reasoning(module_ranks, modules_to_rank)
             modules_ranked_by_llm = modules_to_rank[: query_params["size"]]
 
-    return jsonify(
-        {
-            "modules": paginated_modules,
-            "modulesRankedByLLM": modules_ranked_by_llm,
-            "totalPages": total_pages,
-            "currentPage": query_params["page"],
-            "pageSize": query_params["size"],
-            "totalModules": total_modules,
-        }
-    )
+    return paginated_modules, modules_ranked_by_llm, total_pages, total_modules
 
 
 def extract_query_params():
