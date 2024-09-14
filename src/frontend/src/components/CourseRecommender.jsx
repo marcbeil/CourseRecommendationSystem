@@ -55,7 +55,7 @@ const CourseRecommender = () => {
     const [selectedModule, setSelectedModule] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [pageSize, setPageSize] = useState(15);
+    const [pageSize, setPageSize] = useState(10);
     const [showFilters, setShowFilters] = useState(false)
     const [loading, setLoading] = useState(false);
     const [filtersExpanded, setFiltersExpanded] = useState(false);
@@ -75,10 +75,11 @@ const CourseRecommender = () => {
                 setShowFilters(true);
             } else {
                 setLoading(true); // Start loading
+                setFiltersExpanded(false)
+                setShowFilters(false)
                 setSelectedModule(null);
                 setModules([]);
                 setModulesRankedByLLM([])
-                setFiltersExpanded(false)
                 const response = await axios.post('http://localhost:8080/start-extraction', {
                     text: studentText
                 });
@@ -89,7 +90,7 @@ const CourseRecommender = () => {
                     // Set all states with corresponding values or default values
                     setStudyLevel(filters.studyLevel || '');
                     setSchools(filters.schools || []);
-                    setDepartments(filters.departments || []);
+                    setDepartments(filters.departments || {});
                     setEctsRange([filters.ectsMin || 1, filters.ectsMax || 30]);
                     setTopicsOfInterest(filters.topicsOfInterest || {});
                     setExcludedTopics(filters.topicsToExclude || {});

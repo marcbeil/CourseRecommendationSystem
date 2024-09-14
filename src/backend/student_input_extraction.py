@@ -1,7 +1,4 @@
 import logging
-import os
-from typing import Optional
-
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
@@ -31,7 +28,7 @@ def extract_student_preferences(student_input=EXAMPLE_INPUT) -> StudentPreferenc
         ]
     )
 
-    llm = ChatOpenAI(model="gpt-4-turbo", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
     runnable = prompt | llm.with_structured_output(schema=StudentPreferences)
 

@@ -6,7 +6,7 @@ from rapidfuzz import fuzz
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from sqlalchemy import or_
+from sqlalchemy import or_, text
 
 from backend.db_models import Session, Module
 from backend.module_filter import (
@@ -21,8 +21,6 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
-
-
 vectorstore = VectorStore()
 
 
@@ -41,6 +39,16 @@ def add_reasoning(module_ranks, modules):
             module["reasoning"] = reasoning_map[module_id]
         else:
             module["reasoning"] = None
+
+
+def store_user_input(input):
+    session = Session()
+    session.execute(
+        text("INSERT OR IGNORE INTO user_input(text) VALUES(:input)"),
+        {"input": input},
+    )
+    session.commit()
+    session.close()
 
 
 @app.get("/modules")
@@ -77,7 +85,8 @@ def get_modules():
     # If student text is provided, rank the modules using LLM
     modules_ranked_by_llm = None
     if filtered_modules and query_params["student_text"]:
-        modules_to_rank = filtered_modules[:30]  # Limit to top 100 for ranking
+        store_user_input(query_params["student_text"])
+        modules_to_rank = filtered_modules[:40].copy()  # Limit to top 100 for ranking
         module_ranks = rank_modules(
             student_input=query_params["student_text"],
             modules=tuple(
@@ -90,7 +99,7 @@ def get_modules():
         )
         if module_ranks:
             add_reasoning(module_ranks, modules_to_rank)
-            modules_ranked_by_llm = modules_to_rank[:15]
+            modules_ranked_by_llm = modules_to_rank[: query_params["size"]]
 
     return jsonify(
         {
@@ -126,7 +135,7 @@ def extract_query_params():
         "schools": tuple(request.args.getlist("schools[]")),
         "student_text": request.args.get("studentText", ""),
         "page": request.args.get("page", type=int, default=1),
-        "size": request.args.get("size", type=int, default=10),
+        "size": request.args.get("size", type=int, default=5),
     }
 
 
@@ -190,11 +199,11 @@ def compute_similarity_score(title_a, title_b):
 
 def post_process_prefs(prefs: Dict):
     new_topics_of_interest = {
-        topic: get_topic_mappings(topic, k=4, threshold=0.5)
+        topic: get_topic_mappings(topic, k=30, threshold=0.2)
         for topic in prefs["topicsOfInterest"]
     }
     new_topics_to_exclude = {
-        topic: get_topic_mappings(topic, k=4, threshold=0.5)
+        topic: get_topic_mappings(topic, k=10, threshold=0.15)
         for topic in prefs["topicsToExclude"]
     }
     prefs["topicsOfInterest"] = new_topics_of_interest

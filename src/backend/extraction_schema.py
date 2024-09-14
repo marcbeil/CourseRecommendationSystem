@@ -1,3 +1,4 @@
+from collections import defaultdict
 from enum import Enum
 from typing import Optional, Set, Dict
 
@@ -71,16 +72,11 @@ class StudentPreferences(BaseModel):
         description="Degree the student is pursuing. Select one level out of the provided ones"
     )
     schools: Set[School] = Field(
-        description="School the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair.",
+        description="Schools the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair.",
         default={},
     )
-
     departments: Set[Department] = Field(
         description="Departments the student is interested in.", default={}
-    )
-
-    semester: Optional[int] = Field(
-        default=None, description="Current Semester of the student"
     )
     ects_min: Optional[int] = Field(
         default=1, description="Minimum amount of ects for the module", gt=0
@@ -89,29 +85,39 @@ class StudentPreferences(BaseModel):
         default=30, description="Maximum amount of ects for the module", gt=0
     )
     topics_of_interest: Set[str] = Field(
-        default={}, description="The topics the student is interested in."
+        default=set(), description="The topics the student is interested in."
     )
     topics_to_exclude: Set[str] = Field(
-        default={}, description="Topics that should be excluded"
+        default=set(), description="Topics that should be excluded"
     )
     previous_modules: Set[str] = Field(
-        default={}, description="Courses the student has previously taken"
+        default=set(), description="Courses the student has previously taken"
     )
     previous_module_ids: Set[str] = Field(
-        default={}, description="Module ids of courses the student has previously taken"
+        default=set(), description="Module ids of courses the student has previously taken"
     )
-
     module_languages: Set[ModuleLanguage] = Field(
-        default={},
+        default=set(),
         description="Course language preference of the student. That is the language that is used to teach the course. DO NOT infer the language from the written language of the student's input",
     )
 
     def to_json(self) -> Dict:
+        # Initialize a defaultdict to group departments by schools
+        departments_by_school = defaultdict(list)
+
+        # Iterate over departments and group them by their school using department_mapper
+        for dept in self.departments:
+            school = department_mapper[dept.value]
+            self.schools.add(School(school))  # Correctly add the school to the set
+            departments_by_school[school].append(dept.value)
+
+        # Convert defaultdict to a regular dictionary
+        departments = dict(departments_by_school)
+
         return {
             "studyLevel": self.study_level.value if self.study_level else None,
             "schools": [school.value for school in self.schools],
-            "departments": [dept.value for dept in self.departments],
-            "semester": self.semester,
+            "departments": departments,
             "ectsMin": self.ects_min,
             "ectsMax": self.ects_max,
             "topicsOfInterest": list(self.topics_of_interest),
@@ -120,3 +126,36 @@ class StudentPreferences(BaseModel):
             "previousModuleIds": list(self.previous_module_ids),
             "languages": [lang.value for lang in self.module_languages],
         }
+
+
+department_mapper = {
+    "Department Mathematics": "Computation, Information and Technology",
+    "Department Computer Science": "Computation, Information and Technology",
+    "Department Computer Engineering": "Computation, Information and Technology",
+    "Department Electrical Engineering": "Computation, Information and Technology",
+    "Department Aerospace and Geodesy": "Engineering and Design",
+    "Department Architecture": "Engineering and Design",
+    "Department Civil and Environmental Engineering": "Engineering and Design",
+    "Department Energy and Process Engineering": "Engineering and Design",
+    "Department Engineering Physics and Computation": "Engineering and Design",
+    "Department Materials Engineering": "Engineering and Design",
+    "Department Mechanical Engineering": "Engineering and Design",
+    "Department Mobility Systems Engineering": "Engineering and Design",
+    "Department Molecular Life Sciences": "Life Sciences",
+    "Department Life Science Engineering": "Life Sciences",
+    "Department Life Science Systems": "Life Sciences",
+    "Department Economics and Policy": "Management",
+    "Department Finance and Accounting": "Management",
+    "Department Innovation and Entrepreneurship": "Management",
+    "Department Marketing, Strategy and Leadership": "Management",
+    "Department Operations and Technology": "Management",
+    "Department Health and Sport Sciences": "Medicine and Health",
+    "Department Preclinical Medicine": "Medicine and Health",
+    "Department Clinical Medicine": "Medicine and Health",
+    "Department Physics": "Natural Sciences",
+    "Department Bioscience": "Natural Sciences",
+    "Department Chemistry": "Natural Sciences",
+    "Department Educational Sciences": "Social Sciences and Technology",
+    "Department Governance": "Social Sciences and Technology",
+    "Department Science, Technology and Society": "Social Sciences and Technology",
+}

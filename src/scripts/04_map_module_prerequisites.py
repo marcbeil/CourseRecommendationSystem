@@ -15,15 +15,6 @@ resources_path = "resources"
 modules_con = sqlite3.connect(os.path.join(resources_path, "modules.db"))
 
 
-@lru_cache()
-def fuzzy_similarity(a, b):
-    return fuzz.ratio(a, b)
-
-
-def levenshtein_distance(a, b):
-    return SequenceMatcher(None, a, b).ratio() * 100
-
-
 def map_extracted_ids():
     emi_rows = modules_con.execute(
         "SELECT extracted_module_identifier_id, module_id_uni, identifier FROM extracted_module_identifiers WHERE identifier_type = 'ID'"
