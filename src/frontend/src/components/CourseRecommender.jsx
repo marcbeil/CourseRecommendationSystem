@@ -50,7 +50,7 @@ const CourseRecommender = () => {
     const [excludedTopics, setExcludedTopics] = useState({});
     const [previousModules, setPreviousModules] = useState([]);
     const [modules, setModules] = useState([]);
-    const [modulesRankedByLLM, setModulesRankedByLLM] = useState([])
+    const [modulesRankedByLLM, setModulesRankedByLLM] = useState(null)
     const [selectedTab, setSelectedTab] = useState(0); // 0 for "Modules" tab, 1 for "LLM Modules" tab
     const [selectedModule, setSelectedModule] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -59,6 +59,7 @@ const CourseRecommender = () => {
     const [showFilters, setShowFilters] = useState(false)
     const [loading, setLoading] = useState(false);
     const [filtersExpanded, setFiltersExpanded] = useState(false);
+    const [loadingRankedModules, setLoadingRankedModules] = useState(false); // New state to track loading ranked modules
 
 
 // Add this useEffect after your state declarations
@@ -72,14 +73,16 @@ const CourseRecommender = () => {
         event.preventDefault();
         try {
             if (!studentText) {
+                setSelectedTab(0)
                 setShowFilters(true);
             } else {
                 setLoading(true); // Start loading
+                setSelectedTab(0)
                 setFiltersExpanded(false)
                 setShowFilters(false)
                 setSelectedModule(null);
                 setModules([]);
-                setModulesRankedByLLM([])
+                setModulesRankedByLLM(null)
                 const response = await axios.post('http://localhost:8080/start-extraction', {
                     text: studentText
                 });
@@ -182,10 +185,9 @@ const CourseRecommender = () => {
     };
 
     const handleRefresh = async (page = currentPage) => {
-        setLoading(true);  // Start loading
+        setLoading(true); // Start loading unranked modules
         setSelectedModule(null);
         setModules([]);
-        setModulesRankedByLLM([])
 
         const filters = {
             schools,
@@ -199,37 +201,61 @@ const CourseRecommender = () => {
             previousModules: previousModules.map((module) => module.id),
             studentText
         };
-        const response = await fetchModules(filters, page);  // Pass the page argument to fetchModules
+
+        const response = await fetchModules(filters, page); // Pass the page argument to fetchModules
         if (response) {
             setModules(response.modules);
             setSelectedModule(response.modules[0] || null);
             setTotalPages(response.totalPages);
-            setModulesRankedByLLM(response.modulesRankedByLLM)
+            setLoading(false); // End loading for unranked modules
+            if (studentText) {
+                setModulesRankedByLLM([]);
+                fetchRankedModules(filters, page); // Start fetching ranked modules in the background
+
+            }
+        } else {
+            setLoading(false); // End loading if there was an error
         }
-        setLoading(false);  // End loading
+    };
+
+    const fetchRankedModules = async (filters, page) => {
+        setLoadingRankedModules(true); // Start loading ranked modules
+
+        try {
+            const response = await fetchModules(filters, page, true); // Add a flag or modify to fetch ranked modules
+            if (response) {
+                setModulesRankedByLLM(response.modulesRankedByLLM || []);
+                if (selectedTab === 1) {
+                    setSelectedModule(modulesRankedByLLM[0])
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching ranked modules:', error);
+        } finally {
+            setLoadingRankedModules(false); // End loading for ranked modules
+        }
     };
 
 
-    const fetchModules = async (filters, page) => {  // Accept page as an argument
+    const fetchModules = async (filters, page, ranked = false) => {  // Accept page and ranked as arguments
         try {
-            // Flatten the topicsOfInterest mappings into a single array
             const flattenedTopicsOfInterest = Object.values(filters.topicsOfInterest).flat();
             const flattenedExcludedTopics = Object.values(filters.excludedTopics).flat();
 
-            // Include the flattened topics in the filters object
             const params = {
-                ...filters, topicsOfInterest: flattenedTopicsOfInterest,  // Send the flattened topics to the backend
-                excludedTopics: flattenedExcludedTopics,  // Send the flattened excluded topics to the backend
-                page: page,  // Use the passed page
+                ...filters,
+                topicsOfInterest: flattenedTopicsOfInterest,
+                excludedTopics: flattenedExcludedTopics,
+                page: page,
                 size: pageSize,
             };
-            const response = await axios.get('http://localhost:8080/modules', {
-                params: params,
-            });
+
+            // If fetching ranked modules, add a query parameter or adjust the request as needed
+            const url = ranked ? 'http://localhost:8080/modules-ranked' : 'http://localhost:8080/modules';
+            const response = await axios.get(url, {params});
             return response.data;
         } catch (error) {
             console.error('Error fetching modules:', error);
-            // Handle error appropriately
         }
     };
 
@@ -256,20 +282,22 @@ const CourseRecommender = () => {
         setSelectedModule(module);
     };
     const renderModuleList = (modulesToRender) => {
-        return modulesToRender.map((module) => (<ListItem
-            button
-            key={module.id}
-            onClick={() => handleModuleClick(module)}
-            selected={selectedModule?.id === module.id} // Highlight if this is the selected module
-            sx={{
-                backgroundColor: selectedModule?.id === module.id ? 'rgba(0, 123, 255, 0.1)' : 'inherit', // Light blue background for selected item
-                '&:hover': {
-                    backgroundColor: 'rgba(0, 123, 255, 0.2)', // Slightly darker blue on hover
-                },
-            }}
-        >
-            <ListItemText primary={`${module.id} - ${module.title}`}/>
-        </ListItem>));
+        if (modulesToRender) {
+            return modulesToRender.map((module) => (<ListItem
+                button
+                key={module.id}
+                onClick={() => handleModuleClick(module)}
+                selected={selectedModule?.id === module.id} // Highlight if this is the selected module
+                sx={{
+                    backgroundColor: selectedModule?.id === module.id ? 'rgba(0, 123, 255, 0.1)' : 'inherit', // Light blue background for selected item
+                    '&:hover': {
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)', // Slightly darker blue on hover
+                    },
+                }}
+            >
+                <ListItemText primary={`${module.id} - ${module.title}`}/>
+            </ListItem>));
+        }
     };
 
     return <Container maxWidth="lg" sx={{mt: 4}}>
@@ -471,10 +499,23 @@ const CourseRecommender = () => {
         {loading && <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress/>
         </Box>}
-        {showFilters && <Tabs value={selectedTab} onChange={handleTabChange} centered>
-            <Tab label="Modules"/>
-            {modulesRankedByLLM && <Tab label="LLM Modules"/>}
-        </Tabs>}
+        {showFilters && !loading && (
+            <Tabs value={selectedTab} onChange={handleTabChange} centered>
+                <Tab label="Modules"/>
+                {modulesRankedByLLM && (
+                    <Tab
+                        label={
+                            <Box display="flex" alignItems="center">
+                                LLM Modules
+                                {loadingRankedModules && (
+                                    <CircularProgress size={20} sx={{ml: 1}}/>
+                                )}
+                            </Box>
+                        }
+                    />
+                )}
+            </Tabs>
+        )}
         {showFilters && (<Box display="flex" flexDirection="column" height="100%">
                 <Box
                     display="flex"
@@ -492,7 +533,6 @@ const CourseRecommender = () => {
                         sx={{borderRight: '1px solid lightgray'}}
                     >
                         <List>
-                            {/* Use the renderModuleList function with the appropriate list based on the selectedTab */}
                             {selectedTab === 0 ? renderModuleList(modules) : renderModuleList(modulesRankedByLLM)}
                         </List>
                     </Box>
