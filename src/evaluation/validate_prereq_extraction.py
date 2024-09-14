@@ -130,21 +130,25 @@ def calculate_metrics(df):
         else 0
     )
     return {
-        "ID": {"Precision": precision_ID, "Recall": recall_ID, "Accuracy": accuracy_ID},
+        "ID": {
+            "Precision": precision_ID,
+            "Recall": recall_ID,
+            "Accuracy": accuracy_ID,
+        },
         "TITLE": {
             "Precision": precision_TITLE,
             "Recall": recall_TITLE,
             "Accuracy": accuracy_TITLE,
-            "COMBINED": {
-                "Precision": (precision_TITLE + precision_ID) * 0.5,
-                "Recall": (recall_TITLE + recall_ID) * 0.5,
-                "Accuracy": (accuracy_TITLE + accuracy_ID) * 0.5,
-            },
+        },
+        "COMBINED": {
+            "Precision": (precision_TITLE + precision_ID) * 0.5,
+            "Recall": (recall_TITLE + recall_ID) * 0.5,
+            "Accuracy": (accuracy_TITLE + accuracy_ID) * 0.5,
         },
     }
 
 
-def main(score_threshold=0):
+def metrics_for_score_threshold(score_threshold=0):
     db = connect()
     test_set = get_test_set(db)
     test_set_module_ids = set(
@@ -156,17 +160,6 @@ def main(score_threshold=0):
     )
     df = prepare_dataframe(test_set, extracted_data)
     metrics = calculate_metrics(df)
-    print(f"{score_threshold=}:\n{metrics}")
+    return metrics
 
 
-if __name__ == "__main__":
-    main(0)
-    main(70)
-    main(80)
-    main(90)
-
-
-# {'ID': {'Precision': 0.9727891156462585, 'Recall': 0.6941747572815534, 'Accuracy': 0.680952380952381}, 'TITLE': {'Precision': 0.6594360086767896, 'Recall': 0.6565874730021598, 'Accuracy': 0.49032258064516127}}
-# {'ID': {'Precision': 0.9655172413793104, 'Recall': 0.9514563106796117, 'Accuracy': 0.92018779342723}, 'TITLE': {'Precision': 0.5341074020319303, 'Recall': 0.7948164146868251, 'Accuracy': 0.46938775510204084}}
-# {'ID': {'Precision': 0.9727891156462585, 'Recall': 0.6941747572815534, 'Accuracy': 0.680952380952381}, 'TITLE': {'Precision': 0.6689655172413793, 'Recall': 0.6285097192224622, 'Accuracy': 0.4794069192751236}}
-# {'ID': {'Precision': 0.9727891156462585, 'Recall': 0.6941747572815534, 'Accuracy': 0.680952380952381}, 'TITLE': {'Precision': 0.671875, 'Recall': 0.46436285097192226, 'Accuracy': 0.3785211267605634}}

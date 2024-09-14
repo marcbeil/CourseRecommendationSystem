@@ -77,7 +77,7 @@ def process_emi_row(emi_row, all_module_ids_and_titles):
         key=lambda module_id_title_score: module_id_title_score[2],
     )
 
-    if target_module[2] > 70:
+    if target_module[2] >= 0:
         return (
             module_id_uni,
             target_module[0],
