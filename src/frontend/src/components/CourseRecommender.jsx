@@ -187,6 +187,7 @@ const CourseRecommender = () => {
     const handleRefresh = async (page = currentPage) => {
         setLoading(true); // Start loading unranked modules
         setSelectedModule(null);
+        setSelectedTab(0)
         setModules([]);
 
         const filters = {

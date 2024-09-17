@@ -8,10 +8,7 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 class StudyLevel(Enum):
     BACHELOR = "Bachelor"
     MASTER = "Master"
-    DOCTOR = "Doctor"
     OTHER = "Other"
-    UNKNOWN = "Unknown"
-
 
 class Department(Enum):
     AEROSPACE_AND_GEODESY = "Department Aerospace and Geodesy"

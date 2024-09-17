@@ -19,7 +19,6 @@ class Organisation(Base):
     homepage = Column(String)
     org_id_tumonline = Column(Integer)
     hierarchy = Column(Integer)
-
     parent = relationship(
         "Organisation",
         remote_side=[org_id],

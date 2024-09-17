@@ -2,6 +2,7 @@ import logging
 from functools import lru_cache
 from typing import Dict
 from rapidfuzz import fuzz
+import re
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -22,6 +23,9 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 vectorstore = VectorStore()
+MODULE_ID_UNI_PATTERN = re.compile(
+    r"(?:\W|^)([A-Z]{2,4}[0-9]{3,7}|BGU[0-9A-Z]{5,8}|MW[0-9A-Z]{5}|CH-C[0-9]{2}|BV[0-9]{6}T[0-9]|CS[0-9]{4}BOK|WZ[0-9]{4}BOK|CITHN[0-9]{4,5}|MGTHN[0-9]{4,5}|SG[0-9]{6}(?:e|a|BNB|BBB|VHB|v2)?)(?:\W|$)"
+)
 
 
 def add_reasoning(module_ranks, modules):
@@ -128,16 +132,22 @@ def fetch_unranked_modules(query_params):
 
 def fetch_ranked_modules(query_params):
     """Fetch, rank, and paginate modules based on filter parameters and student text."""
-    # Fetch unranked modules first
-    paginated_modules, total_pages, total_modules = fetch_unranked_modules(query_params)
+    # Fetch a larger set of unranked modules first to ensure there are enough for ranking
+    original_page_size = query_params["size"]
+    larger_page_size = max(
+        query_params["size"], 30
+    )  # Ensure at least 40 modules are fetched
+    query_params["size"] = larger_page_size
+
+    # Fetch unranked modules with a larger page size
+    all_modules, _, total_modules = fetch_unranked_modules(query_params)
 
     # If student text is provided, rank the modules using LLM
     modules_ranked_by_llm = None
-    if paginated_modules and query_params["student_text"]:
+    if all_modules and query_params["student_text"]:
         store_user_input(query_params["student_text"])
 
-        # Limit to a subset of modules for ranking to optimize performance
-        modules_to_rank = paginated_modules[:40].copy()
+        # Use all fetched modules for ranking to optimize performance
         module_ranks = rank_modules(
             student_input=query_params["student_text"],
             modules=tuple(
@@ -145,12 +155,26 @@ def fetch_ranked_modules(query_params):
                     (k, tuple(v) if isinstance(v, list) else v)
                     for k, v in module.items()
                 )
-                for module in modules_to_rank
+                for module in all_modules
             ),
         )
+        print(module_ranks)
         if module_ranks:
-            add_reasoning(module_ranks, modules_to_rank)
-            modules_ranked_by_llm = modules_to_rank[: query_params["size"]]
+            # Add reasoning to the ranked modules
+            add_reasoning(module_ranks, all_modules)
+            # Paginate the ranked modules after adding reasoning
+            paginated_modules, total_pages, _ = paginate(
+                all_modules, query_params["page"], original_page_size
+            )
+            modules_ranked_by_llm = paginated_modules
+            print(len(all_modules))
+            print(query_params["page"])
+
+    else:
+        # No ranking needed, paginate the unranked modules
+        paginated_modules, total_pages, _ = paginate(
+            all_modules, query_params["page"], original_page_size
+        )
 
     return paginated_modules, modules_ranked_by_llm, total_pages, total_modules
 
@@ -206,7 +230,7 @@ def get_modules_by_id():
     )
 
 
-def get_topic_mappings(topic, k, threshold=0.1):
+def get_topic_mappings(topic, k=30, threshold=0.23):
     topic_mappings = vectorstore.map_topic(topic, k=k, threshold=threshold)
     topic_mappings = [mapping.topic for mapping in topic_mappings]
     return topic_mappings
@@ -218,7 +242,7 @@ def map_topic():
     if not topic:
         return jsonify({"message": "Topic is required"}), 400
 
-    threshold = request.args.get("threshold", default=0.2, type=float)
+    threshold = request.args.get("threshold", default=0.23, type=float)
     max_mappings = request.args.get("maxMappings", default=30, type=int)
     logging.info(threshold)
     topic_mappings = get_topic_mappings(topic, k=max_mappings, threshold=threshold)
@@ -241,7 +265,7 @@ def compute_similarity_score(title_a, title_b):
 
 def post_process_prefs(prefs: Dict):
     new_topics_of_interest = {
-        topic: get_topic_mappings(topic, k=30, threshold=0.2)
+        topic: get_topic_mappings(topic, k=30, threshold=0.23)
         for topic in prefs["topicsOfInterest"]
     }
     new_topics_to_exclude = {
@@ -292,20 +316,28 @@ def search_modules():
 
     if not query:
         return jsonify({"modules": []})
-    session = Session()
-    # Assuming you are using a full-text search or similar fuzzy search capability
-    search_results = (
-        session.query(Module.module_id_uni, Module.name)
-        .filter(
-            or_(
-                Module.module_id_uni.ilike(f"%{query}%"),
-                Module.name.ilike(f"%{query}%"),
-            )
-        )
-        .limit(limit)
-        .all()
-    )
 
+    session = Session()
+    is_id = bool(MODULE_ID_UNI_PATTERN.search(query))
+
+    if is_id:
+        # Perform traditional LIKE search on the module_id_uni field if the query is an ID
+        search_results = session.execute(
+            text(
+                f"SELECT module_id_uni, name FROM modules WHERE module_id_uni LIKE :query LIMIT :limit"
+            ),
+            {"query": f"%{query}%", "limit": limit},
+        ).fetchall()
+    else:
+        # Perform FTS5 search on the name field if the query is not an ID
+        search_results = session.execute(
+            text(
+                f"SELECT module_id_uni, name FROM module_fts WHERE name MATCH :query LIMIT :limit"
+            ),
+            {"query": query, "limit": limit},
+        ).fetchall()
+
+        # Format the results for JSON response
     modules = [{"id": r[0], "title": r[1]} for r in search_results]
     return jsonify({"modules": modules})
 
