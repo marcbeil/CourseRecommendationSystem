@@ -147,6 +147,25 @@ def fetch_ranked_modules(query_params):
     if all_modules and query_params["student_text"]:
         store_user_input(query_params["student_text"])
 
+        modules_filtererd_fields = [
+            {
+                key: module[key]
+                for key in [
+                    "id",
+                    "title",
+                    "description",
+                    "prereq",
+                    "ects",
+                    "language",
+                    "studyLevel",
+                    "chair",
+                    "department",
+                    "school",
+                ]
+            }
+            for module in all_modules
+        ]
+
         # Use all fetched modules for ranking to optimize performance
         module_ranks = rank_modules(
             student_input=query_params["student_text"],
@@ -155,10 +174,9 @@ def fetch_ranked_modules(query_params):
                     (k, tuple(v) if isinstance(v, list) else v)
                     for k, v in module.items()
                 )
-                for module in all_modules
+                for module in modules_filtererd_fields
             ),
         )
-        print(module_ranks)
         if module_ranks:
             # Add reasoning to the ranked modules
             add_reasoning(module_ranks, all_modules)
@@ -167,9 +185,10 @@ def fetch_ranked_modules(query_params):
                 all_modules, query_params["page"], original_page_size
             )
             modules_ranked_by_llm = paginated_modules
-            print(len(all_modules))
-            print(query_params["page"])
-
+        else:
+            paginated_modules, total_pages, _ = paginate(
+                all_modules, query_params["page"], original_page_size
+            )
     else:
         # No ranking needed, paginate the unranked modules
         paginated_modules, total_pages, _ = paginate(

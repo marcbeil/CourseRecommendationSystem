@@ -10,6 +10,7 @@ class StudyLevel(Enum):
     MASTER = "Master"
     OTHER = "Other"
 
+
 class Department(Enum):
     AEROSPACE_AND_GEODESY = "Department Aerospace and Geodesy"
     ARCHITECTURE = "Department Architecture"
@@ -91,7 +92,8 @@ class StudentPreferences(BaseModel):
         default=set(), description="Courses the student has previously taken"
     )
     previous_module_ids: Set[str] = Field(
-        default=set(), description="Module ids of courses the student has previously taken"
+        default=set(),
+        description="Module ids of courses the student has previously taken",
     )
     module_languages: Set[ModuleLanguage] = Field(
         default=set(),
@@ -105,7 +107,13 @@ class StudentPreferences(BaseModel):
         # Iterate over departments and group them by their school using department_mapper
         for dept in self.departments:
             school = department_mapper[dept.value]
-            self.schools.add(School(school))  # Correctly add the school to the set
+            # Ensure self.schools is a set
+            if isinstance(self.schools, set):
+                self.schools.add(School(school))
+            else:
+                self.schools = {
+                    School(school)
+                }  # Create a new set if it's not already a set
             departments_by_school[school].append(dept.value)
 
         # Convert defaultdict to a regular dictionary
