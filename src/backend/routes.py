@@ -115,7 +115,7 @@ def fetch_unranked_modules(query_params):
             "departments",
             "previous_modules",
             "topics_of_interest",
-            "topics_to_exclude",
+            "excluded_topics",
         ]
     }
 
@@ -216,7 +216,7 @@ def extract_query_params():
         "departments": tuple(request.args.getlist("departments[]")),
         "previous_modules": tuple(request.args.getlist("previousModules[]")),
         "topics_of_interest": tuple(request.args.getlist("topicsOfInterest[]")),
-        "topics_to_exclude": tuple(request.args.getlist("topicsToExclude[]")),
+        "excluded_topics": tuple(request.args.getlist("excludedTopics[]")),
         "schools": tuple(request.args.getlist("schools[]")),
         "student_text": request.args.get("studentText", ""),
         "page": request.args.get("page", type=int, default=1),

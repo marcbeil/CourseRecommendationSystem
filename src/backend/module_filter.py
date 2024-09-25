@@ -1,10 +1,6 @@
 import itertools
 from functools import lru_cache
-from sqlalchemy import (
-    func,
-    distinct,
-    or_,
-)
+from sqlalchemy import func, distinct, or_, case, select
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql import and_
 
@@ -102,9 +98,6 @@ def modules_by_id(module_ids):
     return modules_dict
 
 
-from sqlalchemy import func, case
-
-
 @lru_cache
 def apply_filters(
     schools,
@@ -117,7 +110,7 @@ def apply_filters(
     departments,
     previous_modules,
     topics_of_interest,
-    topics_to_exclude,
+    excluded_topics,
 ):
     session = Session()
     department = aliased(Organisation)
@@ -218,8 +211,20 @@ def apply_filters(
             .exists()
         )
 
-    if topics_to_exclude:
-        filters_and.append(~Topic.topic.in_(topics_to_exclude))
+    if excluded_topics:
+        logging.info(f"{excluded_topics}")
+        excluded_modules_subquery = (
+            session.query(Module.module_id)
+            .join(ModuleTopicMapping, Module.module_id == ModuleTopicMapping.module_id)
+            .join(Topic, ModuleTopicMapping.topic_id == Topic.topic_id)
+            .filter(Topic.topic.in_(excluded_topics))
+            .subquery()
+        )
+
+        # Now we use select to explicitly refer to the module_id in the subquery
+        filters_and.append(
+            ~Module.module_id.in_(select(excluded_modules_subquery.c.module_id))
+        )
 
     # Apply filters only if they exist
     if filters_and:
