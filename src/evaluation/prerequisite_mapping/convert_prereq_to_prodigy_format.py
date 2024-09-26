@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 # Change to the appropriate directory
-resources_path = "../../resources"
+resources_path = "../../../resources"
 
 modules_con = sqlite3.connect(os.path.join(resources_path, "modules.db"))
 

@@ -170,7 +170,7 @@ def metrics_for_score_threshold(score_threshold=0):
     test_set_module_ids = set(
         map(lambda prereq: prereq["meta"]["module_id_uni"], test_set)
     )
-    modules_con = sqlite3.connect("../../resources/modules.db")
+    modules_con = sqlite3.connect("../../../resources/modules.db")
 
     extracted_data = get_extracted_data(
         modules_con, test_set_module_ids, score_threshold=score_threshold
@@ -199,7 +199,7 @@ def metrics_for_score_threshold_by_school(score_threshold=0):
     test_set_module_ids = set(
         map(lambda prereq: prereq["meta"]["module_id_uni"], test_set)
     )
-    modules_con = sqlite3.connect("../../resources/modules.db")
+    modules_con = sqlite3.connect("../../../resources/modules.db")
 
     # Get module-school mapping
     module_school_df = get_module_school_mapping(modules_con)
