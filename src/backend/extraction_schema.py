@@ -1,8 +1,10 @@
+import logging
 from collections import defaultdict
 from enum import Enum
 from typing import Optional, Set, Dict
 
 from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic.v1 import validator
 
 
 class StudyLevel(Enum):
@@ -64,40 +66,77 @@ class ModuleLanguage(Enum):
 
 
 class StudentPreferences(BaseModel):
-    """Student Message about his current state of studies"""
-
     study_level: Optional[StudyLevel] = Field(
-        description="Degree the student is pursuing. Select one level out of the provided ones"
+        description="Degree the student is pursuing. Select one level out of the provided ones",
+        default=None,  # Optional, defaults to None if not provided
     )
-    schools: Set[School] = Field(
-        description="Schools the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy. University -> School -> Department -> Chair.",
-        default={},
+
+    @validator("study_level", pre=True)
+    def validate_study_level(cls, value):
+        try:
+            return StudyLevel(value)
+        except ValueError:
+            logging.warning(f"Invalid study level value: {value}, skipping.")
+            return None
+
+    schools: Optional[Set[School]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="Schools the student is interested in / studying at. This is not the university. It is one level lower in the hierarchy.",
     )
-    departments: Set[Department] = Field(
-        description="Departments the student is interested in.", default={}
+
+    departments: Optional[Set[Department]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="Departments the student is interested in. Choose out of Departments of the provided List.",
     )
+
+    @validator("departments", pre=True, each_item=False)
+    def validate_departments(cls, value):
+        if not isinstance(value, set):
+            value = set(value)  # Ensure value is a set
+
+        valid_departments = set()
+        for dept in value:
+            try:
+                valid_departments.add(Department(dept))
+            except ValueError:
+                logging.warning(f"Invalid department value: {dept}, skipping.")
+        return valid_departments
+
     ects_min: Optional[int] = Field(
-        default=1, description="Minimum amount of ects for the module", gt=0
+        default=1,  # Defaults to 1 if not provided
+        description="Minimum amount of ECTS for the module.",
+        gt=0,
     )
+
     ects_max: Optional[int] = Field(
-        default=30, description="Maximum amount of ects for the module", gt=0
+        default=30,  # Defaults to 30 if not provided
+        description="Maximum amount of ECTS for the module.",
+        gt=0,
     )
-    topics_of_interest: Set[str] = Field(
-        default=set(), description="The topics the student is interested in."
+
+    topics_of_interest: Optional[Set[str]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="The topics the student is interested in.",
     )
-    topics_to_exclude: Set[str] = Field(
-        default=set(), description="Topics that should be excluded"
+
+    topics_to_exclude: Optional[Set[str]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="Topics that should be excluded.",
     )
-    previous_modules: Set[str] = Field(
-        default=set(), description="Courses the student has previously taken"
+
+    previous_modules: Optional[Set[str]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="Courses the student has previously taken.",
     )
-    previous_module_ids: Set[str] = Field(
-        default=set(),
-        description="Module ids of courses the student has previously taken",
+
+    previous_module_ids: Optional[Set[str]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="Module IDs of courses the student has previously taken.",
     )
-    module_languages: Set[ModuleLanguage] = Field(
-        default=set(),
-        description="Course language preference of the student. That is the language that is used to teach the course. DO NOT infer the language from the written language of the student's input",
+
+    module_languages: Optional[Set[ModuleLanguage]] = Field(
+        default=set(),  # Ensures empty set if not provided or None
+        description="Course language preference of the student.",
     )
 
     def to_json(self) -> Dict:

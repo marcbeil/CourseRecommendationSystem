@@ -282,6 +282,65 @@ def compute_similarity_score(title_a, title_b):
     return score
 
 
+@app.get("/search-modules")
+def search_modules():
+    query = request.args.get("query", "")
+    limit = request.args.get("limit", type=int, default=10)
+
+    if not query:
+        return jsonify({"modules": []})
+
+    session = Session()
+    is_id = bool(MODULE_ID_UNI_PATTERN.search(query))
+
+    if is_id:
+        # Perform traditional LIKE search on the module_id_uni field if the query is an ID
+        search_results = session.execute(
+            text(
+                f"SELECT module_id_uni, name FROM modules WHERE module_id_uni LIKE :query LIMIT :limit"
+            ),
+            {"query": f"%{query}%", "limit": limit},
+        ).fetchall()
+    else:
+        # Perform FTS5 search on the name field if the query is not an ID
+        search_results = session.execute(
+            text(
+                f"SELECT module_id_uni, name FROM module_fts WHERE name MATCH :query LIMIT :limit"
+            ),
+            {"query": query, "limit": limit},
+        ).fetchall()
+
+        # Format the results for JSON response
+    modules = [{"id": r[0], "title": r[1]} for r in search_results]
+    return jsonify({"modules": modules})
+
+
+@app.post("/start-extraction")
+def start_extraction():
+    data = request.get_json()
+    if not data or "text" not in data:
+        return jsonify({"success": False, "message": "Invalid input"}), 400
+
+    student_input = data["text"]
+    logging.info(f"Received input for extraction: {student_input}")
+
+    try:
+        prefs_processed = extract_and_process_user_preferences(
+            student_input=student_input
+        )
+        logging.info(prefs_processed)
+        return jsonify({"success": True, "filters": prefs_processed}), 200
+    except Exception as e:
+        logging.error(f"Error during extraction: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+def extract_and_process_user_preferences(student_input):
+    prefs = extract_student_preferences(student_input=student_input)
+    prefs_processed = post_process_prefs(prefs)
+    return prefs_processed
+
+
 def post_process_prefs(prefs: Dict):
     new_topics_of_interest = {
         topic: get_topic_mappings(topic, k=30, threshold=0.23)
@@ -326,58 +385,6 @@ def post_process_prefs(prefs: Dict):
     if not prefs["languages"]:
         prefs["languages"] = ["English", "German", "Other"]
     return prefs
-
-
-@app.get("/search-modules")
-def search_modules():
-    query = request.args.get("query", "")
-    limit = request.args.get("limit", type=int, default=10)
-
-    if not query:
-        return jsonify({"modules": []})
-
-    session = Session()
-    is_id = bool(MODULE_ID_UNI_PATTERN.search(query))
-
-    if is_id:
-        # Perform traditional LIKE search on the module_id_uni field if the query is an ID
-        search_results = session.execute(
-            text(
-                f"SELECT module_id_uni, name FROM modules WHERE module_id_uni LIKE :query LIMIT :limit"
-            ),
-            {"query": f"%{query}%", "limit": limit},
-        ).fetchall()
-    else:
-        # Perform FTS5 search on the name field if the query is not an ID
-        search_results = session.execute(
-            text(
-                f"SELECT module_id_uni, name FROM module_fts WHERE name MATCH :query LIMIT :limit"
-            ),
-            {"query": query, "limit": limit},
-        ).fetchall()
-
-        # Format the results for JSON response
-    modules = [{"id": r[0], "title": r[1]} for r in search_results]
-    return jsonify({"modules": modules})
-
-
-@app.post("/start-extraction")
-def start_extraction():
-    data = request.get_json()
-    if not data or "text" not in data:
-        return jsonify({"success": False, "message": "Invalid input"}), 400
-
-    student_input = data["text"]
-    logging.info(f"Received input for extraction: {student_input}")
-
-    try:
-        prefs = extract_student_preferences(student_input=student_input)
-        prefs_processed = post_process_prefs(prefs)
-        logging.info(prefs_processed)
-        return jsonify({"success": True, "filters": prefs_processed}), 200
-    except Exception as e:
-        logging.error(f"Error during extraction: {e}")
-        return jsonify({"success": False, "message": str(e)}), 500
 
 
 if __name__ == "__main__":
