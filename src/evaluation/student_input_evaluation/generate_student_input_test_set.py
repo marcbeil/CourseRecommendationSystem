@@ -12,11 +12,31 @@ resources_path = "../../../resources"
 
 modules_con = sqlite3.connect(os.path.join(resources_path, "modules.db"))
 
-user_inputs = modules_con.execute(
-    "Select user_input_id ,text, label From user_input where label like 'user-study-%'"
-).fetchall()
 
-test_set = []
+if "test_set.json" in os.listdir("."):
+    with open("./test_set.json", "r") as file:
+        test_set = json.load(file)
+else:
+    test_set = []
+user_input_ids = list(map(lambda entry: entry["user_input_id"], test_set))
+
+# Check if there are any user_input_ids to exclude
+if user_input_ids:
+    placeholders = ', '.join('?' for _ in user_input_ids)  # Create the right number of placeholders
+    query = f"""
+        SELECT user_input_id, text, label 
+        FROM user_input 
+        WHERE label LIKE 'user-study-%' 
+        AND user_input_id NOT IN ({placeholders})
+    """
+    user_inputs = modules_con.execute(query, tuple(user_input_ids)).fetchall()
+else:
+    query = """
+        SELECT user_input_id, text, label 
+        FROM user_input 
+        WHERE label LIKE 'user-study-%'
+    """
+    user_inputs = modules_con.execute(query).fetchall()
 
 for index, user_input in enumerate(user_inputs):
     user_input_id, text, label = user_input

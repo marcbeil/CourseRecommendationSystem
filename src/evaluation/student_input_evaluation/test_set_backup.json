@@ -1,0 +1,582 @@
+[
+  {
+    "user_input_id": 6,
+    "text": "Im Bene im just finishing my bachelors in computer science and looking for master courses on topics in Bio Informatics.\u2028\u2028\n",
+    "label": "user-study-1",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Computation, Information and Technology",
+        "Life Sciences"
+      ],
+      "departments": {
+        "Life Sciences": [
+          "Department Molecular Life Sciences"
+        ],
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Bio Informatics"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 27,
+    "text": "Im Bene studying INformatics in my bachelors interested in machine learning on business applications. So analyzing business data. And also systems design is of big interest",
+    "label": "user-study-1",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "machine learning",
+        "business applications",
+        "analyzing business data",
+        "systems design"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 50,
+    "text": "Im Bene im just finishing my bachelors in computer science and looking for master courses on topics in Bio Informatics and Machine Learning.",
+    "label": "user-study-1",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Computation, Information and Technology",
+        "Life Sciences"
+      ],
+      "departments": {
+        "Life Sciences": [
+          "Department Molecular Life Sciences"
+        ],
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Machine Learning",
+        "Bio Informatics"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 52,
+    "text": "A course that combines civil engineering with informatics for 5 ects with mainly topics matlab code excercises.",
+    "label": "user-study-2",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [
+        "Computation, Information and Technology",
+        "Engineering and Design"
+      ],
+      "departments": {
+        "Engineering and Design": [
+          "Department Civil and Environmental Engineering"
+        ]
+      },
+      "ectsMin": 5,
+      "ectsMax": 5,
+      "topicsOfInterest": [
+        "matlab code exercises"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 56,
+    "text": "I'd like a course that teaches me Photographics and measurment, with real life examples, as an civil or enviromental enginner. ",
+    "label": "user-study-2",
+    "prefs_expected": {
+      "studyLevel": "Other",
+      "schools": [
+        "Engineering and Design"
+      ],
+      "departments": {
+        "Engineering and Design": [
+          "Department Civil and Environmental Engineering"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Measurement",
+        "Real life examples",
+        "Photographics"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 72,
+    "text": "It is a ourse that teaches me process manegement in civil engineering and gives me the basics , it is a bachelor course and rewards you with 5 ects and the main topic of this modul is real estate manegement and calculating.",
+    "label": "user-study-2",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Engineering and Design"
+      ],
+      "departments": {
+        "Engineering and Design": [
+          "Department Civil and Environmental Engineering"
+        ]
+      },
+      "ectsMin": 5,
+      "ectsMax": 5,
+      "topicsOfInterest": [
+        "real estate management",
+        "process management",
+        "calculating"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 74,
+    "text": "I am a student of civil engineering in the 5th semester, i have around 100 ects and i am in my bachelor course, my favorite topics should include construction manegemnet and economic math, and wood construction and those course should add up to about 30 ects and choice of language irrelevant ",
+    "label": "user-study-2",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Engineering and Design"
+      ],
+      "departments": {
+        "Engineering and Design": [
+          "Department Civil and Environmental Engineering"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "construction management",
+        "economic math",
+        "wood construction"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 79,
+    "text": "Im searching for a math course for civil engineers. I've already did \"Statik I\" and i want to find it's successor. The course is about statics.",
+    "label": "user-study-2",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [
+        "Engineering and Design"
+      ],
+      "departments": {
+        "Engineering and Design": [
+          "Department Civil and Environmental Engineering"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "statics"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [
+        "Statik I"
+      ],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 81,
+    "text": "Im searching for a course about risk evaluation and stochastics. The course should focus on assessing risks in civil engineering. Topics include risk assessment. ",
+    "label": "user-study-2",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [
+        "Engineering and Design"
+      ],
+      "departments": {
+        "Engineering and Design": [
+          "Department Civil and Environmental Engineering"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "stochastics",
+        "risk evaluation",
+        "risk assessment"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 110,
+    "text": "I want to study Business Administration and Data Science, maybe with a bit more focus on Economics and Finance but also AI. The modules should fit to my master studies. I'm very interested in Transformers and Hands-On Experience in creating Large Language Models.",
+    "label": "user-study-3",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Management",
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Management": [
+          "Department Economics and Policy",
+          "Department Finance and Accounting"
+        ],
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Transformers",
+        "Finance",
+        "Data Science",
+        "Business Administration",
+        "AI",
+        "Economics",
+        "Large Language Models"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 112,
+    "text": "I'm looking for course in AI. In particular Machine Learning with a lot learning by doing and also some Business Content. The course should around 6 to 8 ECTS and preferably be in english. I would love a course to start in Winter/Fall 2024.",
+    "label": "user-study-3",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [],
+      "departments": {},
+      "ectsMin": 6,
+      "ectsMax": 8,
+      "topicsOfInterest": [
+        "Machine Learning",
+        "AI",
+        "Business Content"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": [
+        "English"
+      ]
+    }
+  },
+  {
+    "user_input_id": 123,
+    "text": "I'm looking for a course that I had during summer semester. The focus is a lot on automatas and theory of computer science. The teacher talked a lot about turing machines and also about regex. The course had 8 ECTS and there were exercises every week and class bi-weekly.",
+    "label": "user-study-3",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 8,
+      "ectsMax": 8,
+      "topicsOfInterest": [
+        "automatas",
+        "turing machines",
+        "regex",
+        "theory of computer science"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 130,
+    "text": "Im Bene studying INformatics in my bachelors interested in machine learning on business applications. So analyzing business data.\n",
+    "label": "user-study-4",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "machine learning",
+        "business applications",
+        "analyzing business data"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 138,
+    "text": "I'm a bachelor student in political science in the third semester. I would be interested in topics about gender studies and diversity and I want to have a minimum of 3 ECTS for that.",
+    "label": "user-study-4",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Social Sciences and Technology"
+      ],
+      "departments": {},
+      "ectsMin": 3,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "gender studies",
+        "diversity"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 139,
+    "text": "I'm studying politcal science in the first semester and I want to get to know something about qualitative and quantitative research. I want to learn basics theory to use methods for research so that I can use it later in practice.",
+    "label": "user-study-4",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Social Sciences and Technology"
+      ],
+      "departments": {
+        "Social Sciences and Technology": [
+          "Department Governance"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "quantitative research",
+        "qualitative research",
+        "research methods"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 159,
+    "text": "I am interested in a course where I can learn more about business processes and how I can model them. I also have a little bit of experience in modeling languages like BPTM and Petri Nets. I want to know how to optimize processes and also how to streamline them with technology and analytic tools.",
+    "label": "user-study-5",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [],
+      "departments": {},
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "BPTM",
+        "modeling languages",
+        "process optimization",
+        "technology",
+        "Petri Nets",
+        "process modeling",
+        "business processes",
+        "analytic tools"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 164,
+    "text": "Hi, my name is Nils. I am currently studying Information Systems in the Master. I will do my 5th semester now and I need around 30 ETCS excluding my Master thesis. That means I need courses that are 1-30 ETCS worth. Therefor, I am interested into Management courses as I still need around 12 ETCS in that selection area. I am particularly interested in topics as Corporate Finance and Accounting. Also, I would like to dive deeper in the topics of Machine Learning and AI as I already completed the course Introduction to Deep Learning and I want to extend my knowledge in this area.",
+    "label": "user-study-5",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Management",
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Management": [
+          "Department Finance and Accounting"
+        ],
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Machine Learning",
+        "Accounting",
+        "AI",
+        "Corporate Finance"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [
+        "Introduction to Deep Learning"
+      ],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 179,
+    "text": "I'm starting my masters now in october in mangement and technology. I also did the bachelor in the same study program also at tum. My specialization in the bachelor was chemistry. Now for my masters im doing computer engineering as my technology specialization and for the management specialization innovation and entrepreneurship. I'm interested to learn programming but i do not want the hardest programming courses. i would prefer to learn python. I normally like mathematical courses but i did not choose the specialization which is predominatly based on math. I would still want to have courses which do have some math in them. For the entrepreneur part i would prefer courses which are more hands on, have guest speakers and which are not just based on things i have to learn by heart.",
+    "label": "user-study-6",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Computation, Information and Technology",
+        "Management"
+      ],
+      "departments": {
+        "Management": [
+          "Department Innovation and Entrepreneurship"
+        ],
+        "Computation, Information and Technology": [
+          "Department Computer Engineering"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "programming",
+        "Python",
+        "entrepreneurship",
+        "hands-on learning",
+        "mathematics",
+        "guest speakers"
+      ],
+      "topicsToExclude": [
+      ],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 182,
+    "text": "I study TUM-BWL in my bachelors with specialization in chemistry. I want to learn organic chemistry.",
+    "label": "user-study-6",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Natural Sciences",
+        "Management"
+      ],
+      "departments": {
+        "Natural Sciences": [
+          "Department Chemistry"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "organic chemistry"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 186,
+    "text": "I am starting my master in management and society and looking for a course that combines technology innovation and society.",
+    "label": "user-study-6",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Social Sciences and Technology",
+        "Management"
+      ],
+      "departments": {},
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "technology",
+        "innovation",
+        "society"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 187,
+    "text": "I am starting my master in management and society and looking for a course that combines the topics of machine learning, entrepreneuship and data visualization. ",
+    "label": "user-study-6",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Social Sciences and Technology",
+        "Management"
+      ],
+      "departments": {},
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "entrepreneurship",
+        "data visualization",
+        "machine learning"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  }
+]

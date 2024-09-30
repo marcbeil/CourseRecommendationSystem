@@ -1,3 +1,4 @@
+import csv
 from functools import lru_cache
 
 import faiss  # make faiss available
@@ -74,7 +75,9 @@ class VectorStore:
             topic_mappings[topic] = self.map_topic(topic, k, threshold=threshold)
         return topic_mappings
 
-    def save_2d_projection(self, filename="projection.png", transparent=True):
+    def save_2d_projection(
+        self, filename="projection.png", transparent=True, x_offset=0.003, y_offset=0.003
+    ):
         # Convert embeddings to numpy array if not already done
         embeddings = np.array(
             [np.array(json.loads(topic.embedding)) for topic in self.topics]
@@ -88,9 +91,14 @@ class VectorStore:
         plt.figure(figsize=(10, 8))
         plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], s=50, alpha=0.7)
 
-        # Add topic names next to their corresponding points in the 2D plot
+        # Add topic names with a slight offset to avoid overlap
         for i, topic in enumerate(self.topics):
-            plt.text(embeddings_2d[i, 0], embeddings_2d[i, 1], topic.topic, fontsize=9)
+            plt.text(
+                embeddings_2d[i, 0],
+                embeddings_2d[i, 1],
+                topic.topic,
+                fontsize=9,
+            )
 
         # Customize the plot to keep axes but remove labels and ticks
         plt.xticks([])  # Remove x-axis ticks
@@ -103,3 +111,20 @@ class VectorStore:
 
         # Close the plot to free up memory
         plt.close()
+
+    def save_2d_projection_csv(self, filename="projection.csv"):
+        # Convert embeddings to numpy array if not already done
+        embeddings = np.array(
+            [np.array(json.loads(topic.embedding)) for topic in self.topics]
+        )
+
+        # Use PCA to reduce dimensions to 2
+        pca = PCA(n_components=2)
+        embeddings_2d = pca.fit_transform(embeddings)
+
+        # Save 2D projections to a CSV file
+        with open(filename, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Topic", "PCA1", "PCA2"])  # Header row
+            for i, topic in enumerate(self.topics):
+                writer.writerow([topic.topic, embeddings_2d[i, 0], embeddings_2d[i, 1]])
