@@ -10,9 +10,6 @@
         "Life Sciences"
       ],
       "departments": {
-        "Life Sciences": [
-          "Department Molecular Life Sciences"
-        ],
         "Computation, Information and Technology": [
           "Department Computer Science"
         ]
@@ -67,9 +64,6 @@
         "Life Sciences"
       ],
       "departments": {
-        "Life Sciences": [
-          "Department Molecular Life Sciences"
-        ],
         "Computation, Information and Technology": [
           "Department Computer Science"
         ]
@@ -117,7 +111,7 @@
     "text": "I'd like a course that teaches me Photographics and measurment, with real life examples, as an civil or enviromental enginner. ",
     "label": "user-study-2",
     "prefs_expected": {
-      "studyLevel": "Other",
+      "studyLevel": null,
       "schools": [
         "Engineering and Design"
       ],
@@ -289,7 +283,10 @@
     "label": "user-study-3",
     "prefs_expected": {
       "studyLevel": null,
-      "schools": [],
+      "schools": [
+        "Management",
+        "Computation, Information and Technology"
+      ],
       "departments": {},
       "ectsMin": 6,
       "ectsMax": 8,
@@ -370,7 +367,11 @@
       "schools": [
         "Social Sciences and Technology"
       ],
-      "departments": {},
+      "departments": {
+        "Social Sciences and Technology": [
+          "Department Governance"
+        ]
+      },
       "ectsMin": 3,
       "ectsMax": 30,
       "topicsOfInterest": [
@@ -589,8 +590,7 @@
         "Management"
       ],
       "departments": {
-        "Management": [
-        ],
+        "Management": [],
         "Computation, Information and Technology": [
           "Department Computer Science"
         ]

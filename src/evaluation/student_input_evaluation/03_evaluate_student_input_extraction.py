@@ -47,7 +47,9 @@ def calculate_all_metrics(user_input):
 
             # If field is a list (e.g., schools, departments, topicsOfInterest), calculate metrics using set logic
             if isinstance(expected_value, list):
-                precision, recall, accuracy = calculate_metrics(expected_value, actual_value)
+                precision, recall, accuracy = calculate_metrics(
+                    expected_value, actual_value
+                )
 
             # If field is a dictionary (e.g., departments), calculate metrics for each sub-field
             elif isinstance(expected_value, dict):
@@ -64,7 +66,11 @@ def calculate_all_metrics(user_input):
                     recall /= len(expected_value)
                     accuracy /= len(expected_value)
                 else:
-                    precision, recall, accuracy = 1, 1, 1  # If no sub-keys, perfect scores
+                    precision, recall, accuracy = (
+                        1,
+                        1,
+                        1,
+                    )  # If no sub-keys, perfect scores
 
             # If field is a scalar value (e.g., studyLevel, ectsMin), compare directly
             else:
@@ -74,11 +80,11 @@ def calculate_all_metrics(user_input):
 
             # Accumulate the metrics for this field
             if field not in aggregated_metrics:
-                aggregated_metrics[field] = {'precision': 0, 'recall': 0, 'accuracy': 0}
+                aggregated_metrics[field] = {"precision": 0, "recall": 0, "accuracy": 0}
 
-            aggregated_metrics[field]['precision'] += precision
-            aggregated_metrics[field]['recall'] += recall
-            aggregated_metrics[field]['accuracy'] += accuracy
+            aggregated_metrics[field]["precision"] += precision
+            aggregated_metrics[field]["recall"] += recall
+            aggregated_metrics[field]["accuracy"] += accuracy
             total_fields[field] += 1  # Track how many times we evaluate this field
 
             # Accumulate total precision, recall, accuracy for overall calculation
@@ -90,9 +96,9 @@ def calculate_all_metrics(user_input):
     # Compute the averages for each field
     for field in aggregated_metrics:
         count = total_fields[field]
-        aggregated_metrics[field]['precision'] /= count
-        aggregated_metrics[field]['recall'] /= count
-        aggregated_metrics[field]['accuracy'] /= count
+        aggregated_metrics[field]["precision"] /= count
+        aggregated_metrics[field]["recall"] /= count
+        aggregated_metrics[field]["accuracy"] /= count
 
     # Compute overall aggregated precision, recall, and accuracy
     if num_fields > 0:
@@ -106,7 +112,7 @@ def calculate_all_metrics(user_input):
     aggregated_metrics["aggregated"] = {
         "precision": overall_precision,
         "recall": overall_recall,
-        "accuracy": overall_accuracy
+        "accuracy": overall_accuracy,
     }
 
     return aggregated_metrics
@@ -114,16 +120,23 @@ def calculate_all_metrics(user_input):
 
 def write_metrics_to_csv(metrics, file_path):
     # Write metrics to a CSV file
-    with open(file_path, mode='w', newline='') as file:
+    with open(file_path, mode="w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(['Field', 'Precision', 'Recall', 'Accuracy'])
+        writer.writerow(["Field", "Precision", "Recall", "Accuracy"])
 
         for field, field_metrics in metrics.items():
-            writer.writerow([field, field_metrics['precision'], field_metrics['recall'], field_metrics['accuracy']])
+            writer.writerow(
+                [
+                    field,
+                    field_metrics["precision"],
+                    field_metrics["recall"],
+                    field_metrics["accuracy"],
+                ]
+            )
 
 
 # Example usage with your JSON data
-with open("evaluation_set.json", 'r') as file:
+with open("evaluation_set.json", "r") as file:
     user_input_data = json.load(file)
 
 
@@ -134,3 +147,8 @@ csv_file_path = "student_input_evaluation.csv"
 write_metrics_to_csv(aggregated_results, csv_file_path)
 
 print(f"Metrics have been written to {csv_file_path}")
+print(f"Aggregated Results:\n{aggregated_results}")
+
+# aggregated,0.9248214285714285,0.9220982142857143,0.9142212301587301
+
+# {'studyLevel': {'precision': 0.9166666666666666, 'recall': 0.9166666666666666, 'accuracy': 0.9166666666666666}, 'schools': {'precision': 0.9166666666666666, 'recall': 0.8958333333333334, 'accuracy': 0.8541666666666666}, 'departments': {'precision': 0.875, 'recall': 0.875, 'accuracy': 0.875}, 'ectsMin': {'precision': 0.9583333333333334, 'recall': 0.9583333333333334, 'accuracy': 0.9583333333333334}, 'ectsMax': {'precision': 1.0, 'recall': 1.0, 'accuracy': 1.0}, 'topicsOfInterest': {'precision': 0.8270833333333334, 'recall': 0.797371031746032, 'accuracy': 0.7512400793650794}, 'topicsToExclude': {'precision': 0.9583333333333334, 'recall': 0.9583333333333334, 'accuracy': 0.9583333333333334}, 'previousModules': {'precision': 1.0, 'recall': 1.0, 'accuracy': 1.0}, 'previousModuleIds': {'precision': 1.0, 'recall': 1.0, 'accuracy': 1.0}, 'languages': {'precision': 0.7916666666666666, 'recall': 0.7916666666666666, 'accuracy': 0.7916666666666666}, 'aggregated': {'precision': 0.924375, 'recall': 0.9193204365079366, 'accuracy': 0.9105406746031746}}

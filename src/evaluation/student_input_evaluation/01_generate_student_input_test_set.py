@@ -22,11 +22,13 @@ user_input_ids = list(map(lambda entry: entry["user_input_id"], test_set))
 
 # Check if there are any user_input_ids to exclude
 if user_input_ids:
-    placeholders = ', '.join('?' for _ in user_input_ids)  # Create the right number of placeholders
+    placeholders = ", ".join(
+        "?" for _ in user_input_ids
+    )  # Create the right number of placeholders
     query = f"""
         SELECT user_input_id, text, label 
         FROM user_input 
-        WHERE label LIKE 'user-study-%' 
+        WHERE (label LIKE 'user-study-%' or label = 'artificial')
         AND user_input_id NOT IN ({placeholders})
     """
     user_inputs = modules_con.execute(query, tuple(user_input_ids)).fetchall()
@@ -34,7 +36,7 @@ else:
     query = """
         SELECT user_input_id, text, label 
         FROM user_input 
-        WHERE label LIKE 'user-study-%'
+        WHERE label LIKE 'user-study-%' or label = 'artificial'
     """
     user_inputs = modules_con.execute(query).fetchall()
 

@@ -14,7 +14,7 @@ resources_path = "../../../resources"
 modules_con = sqlite3.connect(os.path.join(resources_path, "modules.db"))
 
 user_inputs = modules_con.execute(
-    "Select user_input_id ,text From user_input where label like 'user-study-%'"
+    "Select user_input_id ,text From user_input where label like 'user-study-%' or label = 'artificial'"
 ).fetchall()
 
 with open("test_set.json") as file:

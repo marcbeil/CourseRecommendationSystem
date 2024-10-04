@@ -23,9 +23,6 @@ def extract_student_preferences(student_input=EXAMPLE_INPUT) -> StudentPreferenc
                 "If you do not know the value of an attribute asked to extract, "
                 "return null for the attribute's value.",
             ),
-            # Please see the how-to about improving performance with
-            # reference examples.
-            # MessagesPlaceholder('examples'),
             ("human", "{text}"),
         ]
     )

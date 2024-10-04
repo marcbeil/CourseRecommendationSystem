@@ -73,11 +73,12 @@ class StudentPreferences(BaseModel):
 
     @validator("study_level", pre=True)
     def validate_study_level(cls, value):
-        try:
-            return StudyLevel(value)
-        except ValueError:
-            logging.warning(f"Invalid study level value: {value}, skipping.")
-            return None
+        if isinstance(value, str):
+            try:
+                return StudyLevel(value)
+            except ValueError:
+                logging.warning(f"Invalid study level value: {value}, skipping.")
+                return None
 
     schools: Optional[Set[School]] = Field(
         default=set(),  # Ensures empty set if not provided or None
@@ -136,8 +137,20 @@ class StudentPreferences(BaseModel):
 
     module_languages: Optional[Set[ModuleLanguage]] = Field(
         default=set(),  # Ensures empty set if not provided or None
-        description="Course language preference of the student.",
+        description="Course language preference of the student. Do NOT infer the language from the written language. ",
     )
+
+    @validator("module_languages", pre=True, each_item=True)
+    def validate_module_languages(cls, value):
+        if isinstance(value, str):
+            try:
+                return ModuleLanguage(
+                    value.title()
+                )  # Convert to title case to match enum values
+            except ValueError:
+                logging.warning(f"Invalid language value: {value}, skipping.")
+                return None  # Skip invalid values
+        return value
 
     def to_json(self) -> Dict:
         # Initialize a defaultdict to group departments by schools
