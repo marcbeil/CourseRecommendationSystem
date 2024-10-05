@@ -155,9 +155,10 @@ class StudentPreferences(BaseModel):
     def to_json(self) -> Dict:
         # Initialize a defaultdict to group departments by schools
         departments_by_school = defaultdict(list)
-
+        departments = self.departments or set()
+        module_languages = self.module_languages or set()
         # Iterate over departments and group them by their school using department_mapper
-        for dept in self.departments:
+        for dept in departments:
             school = department_mapper[dept.value]
             # Ensure self.schools is a set
             if isinstance(self.schools, set):
@@ -181,7 +182,7 @@ class StudentPreferences(BaseModel):
             "topicsToExclude": list(self.topics_to_exclude),
             "previousModules": list(self.previous_modules),
             "previousModuleIds": list(self.previous_module_ids),
-            "languages": [lang.value for lang in self.module_languages],
+            "languages": [lang.value for lang in module_languages],
         }
 
 

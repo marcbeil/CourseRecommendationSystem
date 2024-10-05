@@ -584,7 +584,7 @@
     "text": "I am in my 6th semester studying TUM BWL with a specialization in informatics. I have completed all of my mandatory subjects, but I still need to complete 12 ECTS in my management based elective courses and 6 ects for my technical electives. I am interested in more practical courses that focus on applicability and not just theory. I would prefer courses that equip me with the skills necessary to build my own projects from start to finish. I have already completed courses surrounding programming and software development like PGDP and EIST, which I really liked. I am still lacking the skills necessary to make sure I am not implementing any security risks.  ",
     "label": "user-study-7",
     "prefs_expected": {
-      "studyLevel": "Bachelor",
+      "studyLevel": null,
       "schools": [
         "Computation, Information and Technology",
         "Management"
@@ -620,7 +620,7 @@
     "text": "I am studying Business Administration at TUM in the 6th semester and am looking for a technical elective subject. I am interested in maths and love courses where you don't have to learn a lot by heart, but where you can practise a lot. I have already taken \u2018Mathematische Bahendlung der Natur- und Wirtschaftswissenschaften 1\u2019  and really liked the subject.",
     "label": "user-study-7",
     "prefs_expected": {
-      "studyLevel": "Bachelor",
+      "studyLevel": null,
       "schools": [
         "Management"
       ],
@@ -643,7 +643,7 @@
     "text": "I am studying Management and Technology with specialization in informatics in the 6th semester and am looking for a management elective subject. I am interested in FinTech and have been investing crypto for a long time so something in this realm would fit perfectly. I am already part of the TUM Blockchain club, but Im looking for something that gives me a solid groundwork upon which I can build my knowledge.",
     "label": "user-study-7",
     "prefs_expected": {
-      "studyLevel": "Bachelor",
+      "studyLevel": null,
       "schools": [
         "Management",
         "Computation, Information and Technology"
@@ -659,6 +659,218 @@
         "FinTech",
         "Cryptocurrency",
         "Blockchain"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 231,
+    "text": "My Name is Eliah Estermann. I'm currently doing a major in Computer Science im currently in the third semester. I'm searching for an elective course for computer science students and I'm interested in computer graphics and data mining but I still need basic knowledge on these topics. Also I am looking for courses that benefit my chances for job opportunities. I am also open to work as a game developer in the future. Also I am planning to to do a foreign semester in my fifth semester so I can't do an courses during this period.",
+    "label": "user-study-8",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "data mining",
+        "computer graphics",
+        "game development"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 235,
+    "text": "I am doing a major in Computer Science and last semester I completed the course Einf\u00fchrung in die Rechnerarchitektur. I was so amazed by this course, that I now want to upgrade my knowledge on low level programming especially on assembly prefereably with x86 architecture. I want to get practical experience and if possible do a group project on this topic maybe with some programming.",
+    "label": "user-study-8",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "x86 architecture",
+        "assembly",
+        "programming",
+        "low level programming",
+        "group project",
+        "practical experience"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [
+        "Einf\u00fchrung in die Rechnerarchitektur"
+      ],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 238,
+    "text": "I am starting my masters in Data Engineering and I would like to choose some elective courses for my first semester. I am highly interested in Cloud computing and topics related to data processing in the cloud. I would prefer a foundational course but anything is great.",
+    "label": "user-study-9",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Computation, Information and Technology"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Engineering",
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Cloud computing",
+        "Data processing in the cloud"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 240,
+    "text": "I just finished the course \"Grundlagen Algorithmen und Datenstrukturen\" in my previous semester and would like to find an elective course in order to deepen my knowledge on different algorithms that are important to computer science.",
+    "label": "user-study-9",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [],
+      "departments": {},
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "algorithms",
+        "computer science"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [
+        "Grundlagen Algorithmen und Datenstrukturen"
+      ],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 241,
+    "text": "I just finished the course \"Einf\u00fchrung in die Softwaretechnik (EIST)\" in my previous semester and would like to learn more about the discussed topics. Especially, I am interested in different design patterns to tackle common coding problems in real world situations. I would prefer to find a course with practical exercises.",
+    "label": "user-study-9",
+    "prefs_expected": {
+      "studyLevel": null,
+      "schools": [],
+      "departments": {},
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "design patterns",
+        "practical exercises",
+        "coding problems"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [
+        "Einf\u00fchrung in die Softwaretechnik (EIST)"
+      ],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 243,
+    "text": "I want to study information systems as a master and want to learn especially about Machine Learning\n",
+    "label": "user-study-10",
+    "prefs_expected": {
+      "studyLevel": "Master",
+      "schools": [
+        "Computation, Information and Technology",
+        "Management"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "Machine Learning"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 244,
+    "text": "I am a Bachelor Student and want to learn about maximization problems and algorithms concerning problems about planning ",
+    "label": "user-study-10",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Computation, Information and Technology",
+        "Management"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "algorithms",
+        "planning",
+        "maximization problems"
+      ],
+      "topicsToExclude": [],
+      "previousModules": [],
+      "previousModuleIds": [],
+      "languages": []
+    }
+  },
+  {
+    "user_input_id": 246,
+    "text": "I am a bachelor student in information systems and want to take a course about databases and how SQL works. ",
+    "label": "user-study-10",
+    "prefs_expected": {
+      "studyLevel": "Bachelor",
+      "schools": [
+        "Computation, Information and Technology",
+        "Management"
+      ],
+      "departments": {
+        "Computation, Information and Technology": [
+          "Department Computer Science"
+        ]
+      },
+      "ectsMin": 1,
+      "ectsMax": 30,
+      "topicsOfInterest": [
+        "databases",
+        "SQL"
       ],
       "topicsToExclude": [],
       "previousModules": [],

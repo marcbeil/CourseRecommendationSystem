@@ -37,6 +37,7 @@ def calculate_all_metrics(user_input):
     num_fields = 0  # Total number of evaluated fields
 
     for user_data in user_input:
+        print(user_data["label"])
         expected_prefs = user_data["prefs_expected"]
         actual_prefs = user_data["prefs_actual"]
 
