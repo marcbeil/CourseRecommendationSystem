@@ -125,6 +125,6 @@ class VectorStore:
         # Save 2D projections to a CSV file
         with open(filename, mode="w", newline="") as file:
             writer = csv.writer(file)
-            writer.writerow(["Topic", "PCA1", "PCA2"])  # Header row
+            writer.writerow(["Topic", "x", "y"])  # Header row
             for i, topic in enumerate(self.topics):
                 writer.writerow([topic.topic, embeddings_2d[i, 0], embeddings_2d[i, 1]])
