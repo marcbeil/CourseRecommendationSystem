@@ -31,7 +31,7 @@ def rank_modules(student_input, modules: tuple):
     try:
         completion = client.beta.chat.completions.parse(
             temperature=0,
-            model="gpt-4o-2024-08-06",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "system",

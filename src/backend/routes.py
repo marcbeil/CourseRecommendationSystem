@@ -63,7 +63,6 @@ def get_modules():
 
     # Fetch unranked modules
     paginated_modules, total_pages, total_modules = fetch_unranked_modules(query_params)
-
     return jsonify(
         {
             "modules": paginated_modules,
@@ -135,13 +134,13 @@ def fetch_ranked_modules(query_params):
     # Fetch a larger set of unranked modules first to ensure there are enough for ranking
     original_page_size = query_params["size"]
     larger_page_size = max(
-        query_params["size"], 30
+        query_params["size"], 20
     )  # Ensure at least 40 modules are fetched
     query_params["size"] = larger_page_size
 
     # Fetch unranked modules with a larger page size
     all_modules, _, total_modules = fetch_unranked_modules(query_params)
-
+    print(len(all_modules))
     # If student text is provided, rank the modules using LLM
     modules_ranked_by_llm = None
     if all_modules and query_params["student_text"]:
@@ -180,6 +179,7 @@ def fetch_ranked_modules(query_params):
         if module_ranks:
             # Add reasoning to the ranked modules
             add_reasoning(module_ranks, all_modules)
+            print(f"{module_ranks=}")
             # Paginate the ranked modules after adding reasoning
             paginated_modules, total_pages, _ = paginate(
                 all_modules, query_params["page"], original_page_size
@@ -261,11 +261,11 @@ def map_topic():
     if not topic:
         return jsonify({"message": "Topic is required"}), 400
 
-    threshold = request.args.get("threshold", default=0.23, type=float)
-    max_mappings = request.args.get("maxMappings", default=30, type=int)
-    logging.info(threshold)
+    # threshold = request.args.get("threshold", default=0.23, type=float)
+    threshold = request.args.get("threshold", default=0.5, type=float)
+    max_mappings = request.args.get("maxMappings", default=100, type=int)
     topic_mappings = get_topic_mappings(topic, k=max_mappings, threshold=threshold)
-    logging.info(f"{len(topic_mappings)}")
+    print(topic_mappings)
     return jsonify({"topicMappings": topic_mappings}), 200
 
 
@@ -324,19 +324,16 @@ def start_extraction():
     student_input = data["text"]
     logging.info(f"Received input for extraction: {student_input}")
 
-    try:
-        prefs_processed = extract_and_process_user_preferences(
-            student_input=student_input
-        )
-        logging.info(prefs_processed)
-        return jsonify({"success": True, "filters": prefs_processed}), 200
-    except Exception as e:
-        logging.error(f"Error during extraction: {e}")
-        return jsonify({"success": False, "message": str(e)}), 500
+    prefs_processed = extract_and_process_user_preferences(student_input=student_input)
+    logging.info(prefs_processed)
+    return jsonify({"success": True, "filters": prefs_processed}), 200
+    # return jsonify({"success": False, "message": str(e)}), 500
 
 
+@lru_cache
 def extract_and_process_user_preferences(student_input):
     prefs = extract_student_preferences(student_input=student_input)
+    logging.info("Parsing extracted prefs ...")
     prefs_processed = post_process_prefs(prefs)
     return prefs_processed
 

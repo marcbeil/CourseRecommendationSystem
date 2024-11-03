@@ -180,6 +180,7 @@ def apply_filters(
 
     if departments:
         department_ids = [department_mapper[department] for department in departments]
+        logging.info(departments)
         filters_and.append(department.org_id.in_(department_ids))
 
     if previous_modules:
