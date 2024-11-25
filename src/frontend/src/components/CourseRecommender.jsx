@@ -502,12 +502,12 @@ const CourseRecommender = () => {
         </Box>}
         {showFilters && !loading && (
             <Tabs value={selectedTab} onChange={handleTabChange} centered>
-                <Tab label="Modules 1"/>
+                <Tab label="Modules"/>
                 {modulesRankedByLLM && (
                     <Tab
                         label={
                             <Box display="flex" alignItems="center">
-                                Modules 2
+                                Modules (LLM-ranked)
                                 {loadingRankedModules && (
                                     <CircularProgress size={20} sx={{ml: 1}}/>
                                 )}
